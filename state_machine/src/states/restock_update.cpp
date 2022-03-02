@@ -1,8 +1,8 @@
 #include <all_shop_states.hpp>
 
-ShopState& RestockUpdate::getInstance(){
-    static RestockUpdate singleton;
-    return singleton;
+ShopState& RestockUpdate::getInstance() {
+  static RestockUpdate singleton;
+  return singleton;
 }
 
 void RestockUpdate::enter(Shop* shop) {}
