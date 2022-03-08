@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.10)
 project(state_machine)
+
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../UI/build")
+find_package(shopinventory_ui REQUIRED)
 
 add_definitions(-std=c++17)
 set(CMAKE_BUILD_TYPE Release)
@@ -25,3 +28,6 @@ target_link_libraries(login shop)
 target_link_libraries(profit_loss_display shop)
 target_link_libraries(restock_update shop)
 target_link_libraries(restocking_suggestion shop)
+
+add_executable(MAIN src/main.cpp)
+target_link_libraries(MAIN PUBLIC shopinventory_ui::shopinventory_ui)
