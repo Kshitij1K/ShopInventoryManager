@@ -3,7 +3,7 @@ project(shopinventory_ui CXX)
 
 # First, create your library. List all the files one by one. Don't use globs
 add_library(${PROJECT_NAME} 
-  src/mainwindow.cpp  
+  src/mainwindow.cpp
 )
 
 

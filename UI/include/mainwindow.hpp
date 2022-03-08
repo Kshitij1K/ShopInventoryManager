@@ -16,6 +16,9 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void requestPagetwo();
+    void requestPageone();
+
 private:
     Ui::MainWindow *ui;
 };
