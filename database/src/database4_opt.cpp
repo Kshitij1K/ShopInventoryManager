@@ -1,13 +1,33 @@
-#include <database.hpp>
+// g++ test2.cpp -l sqlite3
+
+
+
+#include <list>
+#include <utility>
 #include <iostream>
 #include <sqlite3.h>
+#include <string>
 #include <vector>
 #include <map>
 #include <set>
 using namespace std;
+// Date = "2022-03-08"
+//TIME = "14:00"
 
+typedef std::list<std::pair<std::string, std::string>> AttendanceRecord;
 
+enum class ItemUpdateResults {
+  kExists,
+  kDoesNotExist,
+  kExistsWithDiffName,
+  kStockNegative,
+};
 
+struct Item {
+  long long int item_id;
+  string item_name;
+  float price;
+};
 
 struct Data_v
 {
@@ -15,6 +35,68 @@ struct Data_v
 	vector<map<string, string>>data ;
 };
 
+
+
+
+// bool compartor_1(string s1,string s2)
+// {
+//     string year1 = s1.substr(0,4); 
+//     string year2 = s2.substr(0,4); 
+//     // cout<<year1<<" "<<year2;
+//     int y1 = stoi(year1);
+//     int y2 = stoi(year2);
+
+//     string month1 = s1.substr(5,2); 
+//     string month2 = s2.substr(5,2); 
+//     int m1 = stoi(month1);
+//     int m2 = stoi(month2);
+
+
+
+//     string day1 = s1.substr(8,2); 
+//     string day2 = s2.substr(8,2); 
+
+
+//     // cout<<endl<<month1<<" "<<month2;
+//     // cout<<endl<<day1<<" "<<day2;
+//     int d1 = stoi(day1);
+//     int d2 = stoi(day2);
+
+
+//     if (y1>y2)
+//     {
+//         return true ;
+//     }
+//     else if(y1==y2)
+//     {
+//         if (m1>m2)
+//         {
+//             return true ;
+//         }
+//         else if(m1==m2)
+//         {
+//             if(d1>d2)
+//             {
+//                 return true ;
+//             }
+//         }
+        
+//     }
+//     return false ;
+// }
+
+
+class Database {
+ public:
+  void updateEmployeeLogin(std::string employee_name, std::string time,string date);
+  void updateEmployeeLogout(std::string employee_name, std::string time,string date);
+  AttendanceRecord getEmployeeAttendance(std::string employee_name,
+                                         std::string date);
+  ItemUpdateResults addNewItem(Item new_item,long long int stock = 0);
+  ItemUpdateResults updateStock(Item item, long long int diff);
+  void updateItemsSold(Item item, std::string date, long long int quantity);
+  long long int getItemsSold(Item item, std::string date);
+};
 
 
 
@@ -57,11 +139,10 @@ static int callback1(void *data, int argc, char** argv, char** azColName)
  
 
 
-
-// void Database::updateEmployeeLogin(std::string employee_name, std::string time) 
-void Database::updateEmployeeLogin(std::string employee_name, std::string time,std::string date="")
+// void Database::updateEmployeeLogin(std::string employee_name, std::string time,string date)
+// void Database::updateEmployeeLogin(long long int Emp_Id, std::string time,string date)
+void updateEmployeeLogin(string name, std::string time,string date="")
 {
-    string name = employee_name;
     sqlite3* DB;
 	int exit = 0;
 	exit = sqlite3_open("Db1test", &DB);
@@ -109,8 +190,9 @@ void Database::updateEmployeeLogin(std::string employee_name, std::string time,s
 
 }
 
-// void Database::updateEmployeeLogout(std::string employee_name, std::string time) 
-void Database::updateEmployeeLogout(string name, std::string time,string date="") 
+// void Database::updateEmployeeLogout(std::string employee_name, std::string time,string date) 
+// void Database::updateEmployeeLogout(long long int Emp_Id, std::string time,string date) 
+void updateEmployeeLogout(string name, std::string time,string date="") 
 {
     sqlite3* DB;
 	int exit = 0;
@@ -161,10 +243,10 @@ void Database::updateEmployeeLogout(string name, std::string time,string date=""
         cout << "Operation OK!" << endl;
     }
 	sqlite3_close(DB);
-
 }
 
-AttendanceRecord Database::getEmployeeAttendance(std::string employee_name, std::string date) 
+// AttendanceRecord Database::getEmployeeAttendance(std::string employee_name, std::string date) 
+AttendanceRecord getEmployeeAttendance(std::string employee_name, std::string date) 
 {
     sqlite3* DB;
     std::list<std::pair<std::string, std::string>> ans1 ;
@@ -211,10 +293,11 @@ AttendanceRecord Database::getEmployeeAttendance(std::string employee_name, std:
     sqlite3_close(DB);
     return ans1 ;
 
-
 }
 
-ItemUpdateResults Database::addNewItem(Item new_item,long long int stock = 0) 
+
+// ItemUpdateResults Database::addNewItem(Item new_item,long long int stock = 0) 
+ItemUpdateResults addNewItem(Item new_item,long long int stock = 0) 
 {
     sqlite3* DB;
 	int exit = 0;
@@ -301,12 +384,18 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock = 0)
     }
 	sqlite3_close(DB);
     return return_val;
-
 }
 
-ItemUpdateResults Database::updateStock(Item new_item, long long int diff) 
+
+
+
+
+
+
+// ItemUpdateResults Database::updateStock(Item item, long long int diff) 
+ItemUpdateResults updateStock(Item new_item, long long int diff) 
 {
-     sqlite3* DB;
+    sqlite3* DB;
 	int exit = 0;
     long long int sto_1 ;
 	exit = sqlite3_open("Db1test", &DB);
@@ -439,11 +528,14 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
 
 	sqlite3_close(DB);
     return return_val;
-
-
 }
 
-void Database::updateItemsSold(Item item, std::string date, long long int quantity) 
+
+
+
+// void Database::updateItemsSold(Item new_item, std::string date, long long int quantity) 
+// void Database::updateItemsSold(long long int Item_id, std::string date, long long int quantity) 
+void updateItemsSold(long long int Item_id, std::string date, long long int quantity) 
 {
 
     sqlite3* DB;
@@ -461,9 +553,7 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
 
     char* messaggeError =NULL;
     string insert_1 = "INSERT INTO Sold_by_date VALUES(";
-    // string item_id_1 = to_string(Item_id);
-    string item_id_1 = to_string(item.item_id);
-
+    string item_id_1 = to_string(Item_id);
     string quan_tity = to_string(quantity);
 
     // INSERT INTO Sold_by_date VALUES(2,24,"2022-03-07");
@@ -595,13 +685,16 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
     // cout<<" "<<s1.size();
     // cout<<endl<<*s1.begin();
     sqlite3_close(DB);
+
 }
 
-long long int Database::getItemsSold(Item item, std::string date) 
+// long long int Database::getItemsSold(Item item, std::string date) 
+// long long int Database::getItemsSold(long long int Item_id, std::string date) 
+long long int getItemsSold(long long int Item_id, std::string date) 
 {
-       sqlite3* DB;
+
+    sqlite3* DB;
 	int exit = 0;
-    long long int Item_id = item.item_id;
     long long int sto_1 ;
 	exit = sqlite3_open("Db1test", &DB);
     string query ;
@@ -655,3 +748,105 @@ long long int Database::getItemsSold(Item item, std::string date)
     long long int val = stoll(quantity_1);
     return val ;
 }
+
+
+
+int main(int argc, char const *argv[])
+{
+
+
+//   void updateEmployeeLogin(std::string employee_name, std::string time,string date);
+//   void updateEmployeeLogout(std::string employee_name, std::string time,string date);
+//   AttendanceRecord getEmployeeAttendance(std::string employee_name,
+//                                          std::string date);
+
+
+
+
+
+    Item input_strct ;
+    // input_strct.item_id = 25;
+    // input_strct.item_name = "Sandwich" ;
+    // input_strct.price = 50;
+    // ItemUpdateResults oupt1 = addNewItem(input_strct,150);
+    // if (oupt1==ItemUpdateResults::kExists)
+    // {        cout<<"Exists";    }
+    
+    // else if (oupt1==ItemUpdateResults::kDoesNotExist)
+    // {        cout<<"Item Does not exist,New item Added";    }
+    // else if (oupt1==ItemUpdateResults::kExistsWithDiffName)
+    // { cout<<"Item Does exist,With different Name ";}
+    
+
+
+
+
+
+    // input_strct.item_id = 20;
+    // input_strct.item_name = "Kellogs" ;
+    // input_strct.price = 50;
+    // ItemUpdateResults oupt1 = updateStock(input_strct,-55);
+    // if (oupt1==ItemUpdateResults::kExists)
+    // {        cout<<"Exists";    }
+    
+    // else if (oupt1==ItemUpdateResults::kDoesNotExist)
+    // {        cout<<"Data ID Does not exist";    }
+    // else if (oupt1==ItemUpdateResults::kExistsWithDiffName)
+    // { cout<<"Item Does exist,With different Name ";}
+    // else if (oupt1==ItemUpdateResults::kStockNegative)
+    // { cout<<"Item Does exist,Demand more stocks but not present in table ";}
+    
+
+
+
+
+
+    //Sold_by_date table
+    // updateItemsSold(17,"2021-12-26",13);
+    // updateItemsSold(20,"2021-12-28",10);
+    // updateItemsSold(14,"2022-03-05",21);
+    // updateItemsSold(1,"2022-03-05",12);
+    // updateItemsSold(22,"2021-12-28",21);
+    // updateItemsSold(22,"2021-12-27",21);
+
+
+
+    // oldest_Date
+
+    // compartor("2022-03-06","2022-03-06");
+
+
+
+
+    //Sold_by_date
+    // long long int ans = getItemsSold(1,"2022-03-06");
+    // cout<<endl<<"Quantities Sold "<<ans<<endl;
+    // ans = getItemsSold(1,"2022-03-09");
+    // cout<<endl<<"Quantities Sold "<<ans<<endl;
+
+
+
+    // updateEmployeeLogin("Abhinav Garg","09:00" ,"2022-03-11");
+    // updateEmployeeLogout("Hitesh Poply","19:00","2022-03-16");
+    // updateEmployeeLogout("Namita Kalra","15:00","2022-03-06");
+
+
+
+
+
+
+    std::list<std::pair<std::string, std::string>> ans1 = getEmployeeAttendance("Sandeep Reddy","2022-03-09");
+    ans1 = getEmployeeAttendance("Sandeep Reddy","2022-03-08");
+    
+    for (auto x :ans1)
+    {
+        cout<<"\n "<<x.first<<" "<<x.second ;
+    }
+    
+    return 0;
+}
+
+
+
+
+

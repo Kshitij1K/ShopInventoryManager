@@ -16,18 +16,23 @@ enum class ItemUpdateResults {
 
 struct Item {
   long long int item_id;
-  long long int item_name;
+  string item_name;
   float price;
 };
 
 class Database {
  public:
-  void updateEmployeeLogin(std::string employee_name, std::string time);
-  void updateEmployeeLogout(std::string employee_name, std::string time);
+  void updateEmployeeLogin(std::string employee_name, std::string time,std::string date="");
+  // void updateEmployeeLogin(std::string employee_name, std::string time);
+
+  void updateEmployeeLogout(std::string employee_name, std::string time,std::string date="");
+  // void updateEmployeeLogout(std::string employee_name, std::string time);
   AttendanceRecord getEmployeeAttendance(std::string employee_name,
                                          std::string date);
 
-  ItemUpdateResults addNewItem(Item new_item);
+  // ItemUpdateResults addNewItem(Item new_item);
+  ItemUpdateResults addNewItem(Item new_item,long long int stock=0);
+
 
   ItemUpdateResults updateStock(Item item, long long int diff);
 
