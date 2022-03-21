@@ -26,14 +26,7 @@
          <layout class="QGridLayout" name="gridLayout_5">
           <item row="0" column="0">
            <layout class="QGridLayout" name="gridLayout_3">
-            <item row="2" column="0">
-             <widget class="QPushButton" name="pushButton_next">
-              <property name="text">
-               <string>Next</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
+            <item row="4" column="1">
              <spacer name="verticalSpacer_3">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -46,20 +39,7 @@
               </property>
              </spacer>
             </item>
-            <item row="2" column="1">
-             <spacer name="horizontalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="1" column="0">
+            <item row="9" column="1">
              <spacer name="verticalSpacer_2">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -72,20 +52,40 @@
               </property>
              </spacer>
             </item>
-            <item row="2" column="2">
-             <spacer name="horizontalSpacer">
+            <item row="8" column="1">
+             <spacer name="verticalSpacer_10">
               <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+               <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
-                <width>40</width>
-                <height>20</height>
+                <width>20</width>
+                <height>40</height>
                </size>
               </property>
              </spacer>
             </item>
-            <item row="0" column="0">
+            <item row="1" column="1">
+             <spacer name="verticalSpacer_8">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="5" column="1">
+             <widget class="QLabel" name="label_2">
+              <property name="text">
+               <string>Password</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
              <spacer name="verticalSpacer">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
@@ -98,9 +98,96 @@
               </property>
              </spacer>
             </item>
+            <item row="7" column="1">
+             <widget class="QPushButton" name="login_button">
+              <property name="text">
+               <string>Login</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="3">
+             <widget class="QPushButton" name="reset_button">
+              <property name="text">
+               <string>Reset</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="1">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Username</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <spacer name="verticalSpacer_9">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="6" column="1">
+             <spacer name="verticalSpacer_11">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="3" column="2">
+             <widget class="QLineEdit" name="username_field"/>
+            </item>
+            <item row="5" column="2">
+             <widget class="QLineEdit" name="password_field"/>
+            </item>
+            <item row="3" column="0">
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
            </layout>
           </item>
          </layout>
+        </widget>
+        <widget class="QWidget" name="page_3">
+         <widget class="QWidget" name="gridLayoutWidget">
+          <property name="geometry">
+           <rect>
+            <x>9</x>
+            <y>9</y>
+            <width>1021</width>
+            <height>591</height>
+           </rect>
+          </property>
+          <layout class="QGridLayout" name="gridLayout_7">
+           <item row="0" column="0">
+            <widget class="QPushButton" name="pushButton">
+             <property name="text">
+              <string>This is admin</string>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
         </widget>
         <widget class="QWidget" name="page_2">
          <layout class="QGridLayout" name="gridLayout_6">
@@ -151,13 +238,6 @@
               </property>
              </spacer>
             </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="pushButton_prev">
-              <property name="text">
-               <string>Prev</string>
-              </property>
-             </widget>
-            </item>
             <item row="3" column="2">
              <spacer name="verticalSpacer_4">
               <property name="orientation">
@@ -196,6 +276,13 @@
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="pushButton_prev">
+              <property name="text">
+               <string>This is employee</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>

@@ -7,3 +7,7 @@ ShopState& AdminOptionSelection::getInstance() {
 
 void AdminOptionSelection::enter(Shop* shop) {}
 void AdminOptionSelection::exit(Shop* shop) {}
+
+void AdminOptionSelection::eventCalled(Event event, Shop* shop) {}
+
+AdminOptionSelection::AdminOptionSelection(){}

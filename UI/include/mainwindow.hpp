@@ -3,24 +3,26 @@
 
 #include <QMainWindow>
 #include <QApplication>
+#include <shop.hpp>
 
 namespace Ui {
 class MainWindow;
 }
 
-class MainWindow : public QMainWindow
+class MainWindow  : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+    explicit MainWindow(Shop* shop, QWidget *parent = nullptr);
     ~MainWindow();
 
-    void requestPagetwo();
-    void requestPageone();
+    void loginButtonPressed();
+    void resetButtonPressed();
 
 private:
     Ui::MainWindow *ui;
+    Shop* shop_;
 };
 
 #endif // MAINWINDOW_H

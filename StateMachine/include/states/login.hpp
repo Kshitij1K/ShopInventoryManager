@@ -7,8 +7,10 @@ class Login : public ShopState {
   void enter(Shop* shop);
   void exit(Shop* shop);
   static ShopState& getInstance();
+  void eventCalled(Event event, Shop* shop);
 
  private:
+  Shop* shop_;
   Login();
   Login(const Login& other);
   Login& operator=(const Login& other);

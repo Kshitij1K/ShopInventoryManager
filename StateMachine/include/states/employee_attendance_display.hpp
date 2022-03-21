@@ -1,6 +1,7 @@
 #pragma once
-#include <shop.hpp>
 #include <shop_state.hpp>
+
+class Shop;
 
 class EmployeeAttendanceDisplay : public ShopState {
  public:

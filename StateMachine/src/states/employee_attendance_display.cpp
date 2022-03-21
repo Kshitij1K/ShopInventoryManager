@@ -7,3 +7,4 @@ ShopState& EmployeeAttendanceDisplay::getInstance() {
 
 void EmployeeAttendanceDisplay::enter(Shop* shop) {}
 void EmployeeAttendanceDisplay::exit(Shop* shop) {}
+

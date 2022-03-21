@@ -6,6 +6,7 @@ add_library(${PROJECT_NAME}
   src/mainwindow.cpp
 )
 
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../StateMachine/build")
 
 # Then add an alias of your library to enable target syntax
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -29,6 +30,9 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 # Then, include Qt and link qt
 find_package(Qt6 COMPONENTS Core Widgets REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC Qt6::Core Qt6::Widgets)
+
+find_package(state_machine REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC state_machine::state_machine)
 
 # Now, create the install script. We install all header files under `include/yourlibrary` to install them in `<prefix>/include/yourlibrary`:
 install(
