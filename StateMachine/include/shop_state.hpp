@@ -10,6 +10,8 @@ class ShopState {
   enum class Event {kLoginCalled,
                     kRestockUpdateCalled,
                     kRestockSuggestionCalled,
+                    kRestockSuggestionAsked,
+                    kStockInfoCalled,
                     kProfitLossCalled,
                     kEmployeeAttendanceCalled,
                     kItemScanned,

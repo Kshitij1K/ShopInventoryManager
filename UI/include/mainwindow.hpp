@@ -18,7 +18,13 @@ public:
     ~MainWindow();
 
     void loginButtonPressed();
+    void logoutButtonPressed();
     void resetButtonPressed();
+    void stockInfoRequested();
+    void employeeListRequested();
+    void recommendationPageRequested();
+    void adminBackButtonPressed();
+    void suggestionAsked();
 
 private:
     Ui::MainWindow *ui;

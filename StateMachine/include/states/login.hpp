@@ -10,7 +10,6 @@ class Login : public ShopState {
   void eventCalled(Event event, Shop* shop);
 
  private:
-  Shop* shop_;
   Login();
   Login(const Login& other);
   Login& operator=(const Login& other);

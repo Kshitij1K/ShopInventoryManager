@@ -6,7 +6,6 @@ ShopState& Login::getInstance() {
 }
 
 void Login::enter(Shop* shop) {
-  shop_ = shop;
 }
 void Login::exit(Shop* shop) {
 }

@@ -10,5 +10,5 @@ int main(int argc, char** argv) {
     MainWindow* window = new MainWindow(&shop);
     window->show();
 
-    return 0;
+    return app.exec();
 } 

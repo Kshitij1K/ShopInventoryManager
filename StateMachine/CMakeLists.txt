@@ -24,6 +24,8 @@ add_library(
   src/states/admin_option_selection.cpp
   src/states/employee_portal.cpp
   src/states/login.cpp
+  src/states/restocking_suggestion.cpp
+  src/states/employee_attendance_display.cpp
 )
 # target_link_libraries(
 #   ${PROJECT_NAME}

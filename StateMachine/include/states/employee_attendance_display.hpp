@@ -8,6 +8,7 @@ class EmployeeAttendanceDisplay : public ShopState {
   void enter(Shop* shop);
   void exit(Shop* shop);
   static ShopState& getInstance();
+  void eventCalled(Event event, Shop* shop);
 
  private:
   EmployeeAttendanceDisplay();
