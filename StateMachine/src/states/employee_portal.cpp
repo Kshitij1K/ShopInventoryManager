@@ -7,3 +7,7 @@ ShopState& EmployeePortal::getInstance() {
 
 void EmployeePortal::enter(Shop* shop) {}
 void EmployeePortal::exit(Shop* shop) {}
+
+void EmployeePortal::eventCalled(Event event, Shop* shop) {}
+
+EmployeePortal::EmployeePortal(){};
