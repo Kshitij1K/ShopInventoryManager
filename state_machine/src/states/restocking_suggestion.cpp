@@ -1,19 +1,16 @@
-//#include <all_shop_states.hpp>
+#include <all_shop_states.hpp>
 #include "ortools/linear_solver/linear_solver.h"
 #include <iostream>
-/*
+
 ShopState& RestockingSuggestion::getInstance() {
   static RestockingSuggestion singleton;
   return singleton;
 }
-*/
 
 
-
-/*
 void RestockingSuggestion::enter(Shop* shop) {}
 void RestockingSuggestion::exit(Shop* shop) {}
-*/
+
 
 namespace optimizer {
 void MipVarArray(std::vector<long long> current_inventory, std::vector<long double> buying_price, std::vector<long double> selling_price, std::vector<long double> holding_cost, std::vector<long long> forecast, long double capital) {
@@ -77,9 +74,9 @@ void MipVarArray(std::vector<long long> current_inventory, std::vector<long doub
   return(solution);
 
 }
-}  // namespace operations_research
+}  // namespace optimizer
 
-
+/*
 // For Debugging
 int main(int argc, char** argv) {
   std::vector<double>solution;
@@ -97,5 +94,5 @@ int main(int argc, char** argv) {
   }
   return EXIT_SUCCESS;
 }
-
+*/
 
