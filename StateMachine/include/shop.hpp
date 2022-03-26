@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <shop_state.hpp>
+#include <database.hpp>
 
 class Shop {
  public:
@@ -17,6 +18,8 @@ class Shop {
 
   bool are_credentials_correct;
   bool is_admin_login;
+
+  Database database;
 
   void callEvent(ShopState::Event event);
 

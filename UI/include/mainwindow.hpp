@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include <QApplication>
+#include <QTableView>
 #include <shop.hpp>
+#include <models/stock_info_model.hpp>
 
 namespace Ui {
 class MainWindow;
@@ -22,13 +24,18 @@ public:
     void resetButtonPressed();
     void stockInfoRequested();
     void employeeListRequested();
+    void updateItemsRequested();
     void recommendationPageRequested();
     void adminBackButtonPressed();
     void suggestionAsked();
 
+    void prepareStockInfoTable();
+
 private:
     Ui::MainWindow *ui;
     Shop* shop_;
+
+    StockInfoModel stock_info_model;
 };
 
 #endif // MAINWINDOW_H

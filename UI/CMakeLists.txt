@@ -4,9 +4,12 @@ project(shopinventory_ui CXX)
 # First, create your library. List all the files one by one. Don't use globs
 add_library(${PROJECT_NAME} 
   src/mainwindow.cpp
+  src/models/stock_info_model.cpp
 )
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../StateMachine/build")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Database/build")
+
 
 # Then add an alias of your library to enable target syntax
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
@@ -33,6 +36,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC Qt6::Core Qt6::Widgets)
 
 find_package(state_machine REQUIRED)
 target_link_libraries(${PROJECT_NAME} PUBLIC state_machine::state_machine)
+
+find_package(database REQUIRED)
+target_link_libraries(${PROJECT_NAME} PUBLIC database::database)
 
 # Now, create the install script. We install all header files under `include/yourlibrary` to install them in `<prefix>/include/yourlibrary`:
 install(

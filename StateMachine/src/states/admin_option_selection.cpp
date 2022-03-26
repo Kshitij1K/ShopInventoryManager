@@ -11,8 +11,12 @@ void AdminOptionSelection::exit(Shop* shop) {}
 void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
   switch (event)
   {
-  case ShopState::Event::kRestockSuggestionCalled:
-    shop->setState(RestockingSuggestion::getInstance());
+  // case ShopState::Event::kRestockSuggestionCalled:
+  //   shop->setState(RestockingSuggestion::getInstance());
+  //   break;
+
+  case ShopState::Event::kItemUpdateCalled:
+    shop->setState(ItemUpdate::getInstance());
     break;
 
   case ShopState::Event::kEmployeeAttendanceCalled:

@@ -15,15 +15,24 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->admin_logout_button, &QPushButton::clicked, this, &MainWindow::logoutButtonPressed);
 
     QObject::connect(ui->stock_info_button, &QPushButton::clicked, this, &MainWindow::stockInfoRequested);
-    QObject::connect(ui->employee_list_button, &QPushButton::clicked, this, &MainWindow::employeeListRequested);
+    // QObject::connect(ui->employee_list_button, &QPushButton::clicked, this, &MainWindow::employeeListRequested);
+    QObject::connect(ui->Update_Item_Information, &QPushButton::clicked, this, &MainWindow::updateItemsRequested);
     QObject::connect(ui->recommendation_system_button, &QPushButton::clicked, this, &MainWindow::recommendationPageRequested);
     
     QObject::connect(ui->restocking_suggestion_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
-    QObject::connect(ui->employee_list_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
-    QObject::connect(ui->stock_info_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+    // QObject::connect(ui->employee_list_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+    QObject::connect(ui->Back_Button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
 
     QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
 
+    // ui->Stock_Information_Table->setModel(&stock_info_model);
+
+    // ui->Stock_Information_Table->insertRow(2);
+    // ui->Stock_Information_Table->setRowCount(10);
+    // ui->Stock_Information_Table->setColumnCount(4);
+    // QStringList k = {"yo, u, i, o"};
+    // ui->Stock_Information_Table->setHorizontalHeaderLabels(k);
+    // ui->Stock_Information_Table->
 }
 
 MainWindow::~MainWindow()
@@ -56,14 +65,17 @@ void MainWindow::logoutButtonPressed() {
 }
 
 void MainWindow::stockInfoRequested() {
-    // ui->stackedWidget->setCurrentIndex(3);
-    // shop_->callEvent(ShopState::Event::kStockInfoCalled);
+    ui->stackedWidget->setCurrentIndex(2);
+    shop_->callEvent(ShopState::Event::kStockInfoCalled);
+    prepareStockInfoTable();
+    // ui->Stock_Information_Table->setRows()
 }
 
-void MainWindow::employeeListRequested() {
-    ui->stackedWidget->setCurrentIndex(2);
-    shop_->callEvent(ShopState::Event::kEmployeeAttendanceCalled);
-}
+// void MainWindow::employeeListRequested() {
+//     ui->stackedWidget->setCurrentIndex(2);
+//     shop_->callEvent(ShopState::Event::kEmployeeAttendanceCalled);
+//     ui->employee_list_table->setModel(&employee_attendance);
+// }
 
 void MainWindow::recommendationPageRequested() {
     ui->stackedWidget->setCurrentIndex(4);
@@ -75,8 +87,25 @@ void MainWindow::adminBackButtonPressed() {
     shop_->callEvent(ShopState::Event::kExitCalled);
 }
 
+void MainWindow::updateItemsRequested() {
+    ui->stackedWidget->setCurrentIndex(3);
+    // shop_->callEvent(ShopState::Event::kExitCalled);
+}
+
+
 void MainWindow::suggestionAsked() {
     shop_->callEvent(ShopState::Event::kRestockSuggestionAsked);
+}
+
+void MainWindow::prepareStockInfoTable() {
+    // ui->Stock_Information_Table->setColumnCount(4);
+    ui->Stock_Information_Table->setRowCount(10);
+    ui->Stock_Information_Table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // ui->Stock_Information_Table->verticalHeader()->setHidden(true);
+    auto k = new QTableWidgetItem(QString("Test data"));
+    ui->Stock_Information_Table->setItem(0, 0, k);
+    // QStringList column_names = {"Item ID", "Item Name", "Item Price", "Item Profit/Loss"};
+
 }
 
 #include "moc_mainwindow.cpp"

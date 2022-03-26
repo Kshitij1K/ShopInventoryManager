@@ -8,3 +8,5 @@ cd ../..
 
 cd main/build
 make
+shop_inventory_manager.exe
+cd ../..

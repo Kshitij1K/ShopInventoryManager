@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 project(state_machine)
 
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../UI/build")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Database/build")
 # find_package(shopinventory_ui REQUIRED)
 
 add_definitions(-std=c++17)
@@ -10,12 +10,14 @@ set(CMAKE_BUILD_TYPE Release)
 
 include_directories(include)
 
+find_package(database REQUIRED)
+
 # add_library(admin_option_selection src/states/admin_option_selection.cpp)
 # add_library(employee_attendance_display src/states/employee_attendance_display.cpp)
 # add_library(employee_portal src/states/employee_portal.cpp)
 # add_library(login src/states/login.cpp)
 # add_library(profit_loss_display src/states/profit_loss_display.cpp)
-# add_library(restock_update src/states/restock_update.cpp)
+# add_library(item_update src/states/item_update.cpp)
 # add_library(restocking_suggestion src/states/restocking_suggestion.cpp)
 
 add_library(
@@ -24,7 +26,7 @@ add_library(
   src/states/admin_option_selection.cpp
   src/states/employee_portal.cpp
   src/states/login.cpp
-  src/states/restocking_suggestion.cpp
+  src/states/item_update.cpp
   src/states/employee_attendance_display.cpp
 )
 # target_link_libraries(
@@ -33,6 +35,8 @@ add_library(
 #   employee_portal
 #   admin_option_selection
 # )
+
+target_link_libraries(${PROJECT_NAME} PUBLIC database::database)
 
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
@@ -88,7 +92,7 @@ install(
 # target_link_libraries(employee_portal shop)
 # target_link_libraries(login shop)
 # target_link_libraries(profit_loss_display shop)
-# target_link_libraries(restock_update shop)
+# target_link_libraries(item_update shop)
 # target_link_libraries(restocking_suggestion shop)
 
 # add_executable(MAIN src/main.cpp)
