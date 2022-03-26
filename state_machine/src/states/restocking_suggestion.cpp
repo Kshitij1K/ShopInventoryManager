@@ -7,45 +7,55 @@ ShopState& RestockingSuggestion::getInstance() {
   return singleton;
 }
 
-namespace optimizer{
-std::vector<double> MipVarArray(long long n, std::vector<long double> buying_price,std::vector<long double> selling_price,std::vector<long double> holding_cost,std::vector<long long> forecast,long double capital) {
 
-  std::vector<double> solution;
+void RestockingSuggestion::enter(Shop* shop) {}
+void RestockingSuggestion::exit(Shop* shop) {}
+
+
+namespace optimizer {
+void MipVarArray(std::vector<long long> current_inventory, std::vector<long double> buying_price, std::vector<long double> selling_price, std::vector<long double> holding_cost, std::vector<long long> forecast, long double capital) {
   // Create the mip solver with the SCIP backend.
   std::unique_ptr<MPSolver> solver(MPSolver::CreateSolver("SCIP"));
   if (!solver) {
     LOG(WARNING) << "SCIP solver unavailable.";
-    return solution;
+    return;
   }
-
+  std::vector<double> solution;
+  long long n = current_inventory.size();
   const double infinity = solver->infinity();
   // x[j] is an array of non-negative, integer variables.
-  std::vector<const MPVariable*> x(n);
+  std::vector<const MPVariable*> x(2*n);
   for (int j = 0; j < n; ++j) {
-    x[j] = solver->MakeIntVar(forecast[j], infinity, "");
+    x[j] = solver->MakeIntVar(0.0, infinity, "");
+    x[n+j] = solver->MakeIntVar(-infinity, infinity, "");
+
   }
   //LOG(INFO) << "Number of variables = " << solver->NumVariables();
 
-  /*
   // Create the constraints.
-  for (int i = 0; i < data.num_constraints; ++i) {
-    MPConstraint* constraint = solver->MakeRowConstraint(0, data.bounds[i], "");
-    for (int j = 0; j < data.num_vars; ++j) {
-      constraint->SetCoefficient(x[j], data.constraint_coeffs[i][j]);
-    }
-  }
-  LOG(INFO) << "Number of constraints = " << solver->NumConstraints();
-  */
-  MPConstraint* const c0 = solver->MakeRowConstraint(-infinity, capital, "c0");
-  for (int j =0 ; j<n ;j++){
-    c0 -> SetCoefficient(x[j], buying_price[j]) ;
+  for (int i = 0; i <n; ++i) {
+    long double lower_bound_1,lower_bound_2;
+    lower_bound_1 = holding_cost[i]*(current_inventory[i] - forecast[i]);
+    lower_bound_2 = -selling_price[i]*(current_inventory[i] - forecast[i]);
+    MPConstraint* constraint_1 = solver->MakeRowConstraint(lower_bound_1, infinity, "");
+    MPConstraint* constraint_2 = solver->MakeRowConstraint(lower_bound_2, infinity, "");
+    constraint_1->SetCoefficient(x[i],-holding_cost[i] );
+    constraint_1->SetCoefficient(x[n+i],1 );
+    constraint_2->SetCoefficient(x[i],selling_price[i] );
+    constraint_2->SetCoefficient(x[n+i],1 );
   }
 
+  MPConstraint* constraint = solver->MakeRowConstraint(0,capital,"");
+  for (int i =0; i<n; ++i){
+    constraint->SetCoefficient(x[i],buying_price[i]);
+  }
+  //LOG(INFO) << "Number of constraints = " << solver->NumConstraints();
 
   // Create the objective function.
   MPObjective* const objective = solver->MutableObjective();
   for (int j = 0; j < n; ++j) {
-    objective->SetCoefficient(x[j], selling_price[j]-buying_price[j]-holding_cost[j]);
+    objective->SetCoefficient(x[j], -buying_price[j]);
+    objective->SetCoefficient(x[n+j], -1);
   }
   objective->SetMaximization();
 
@@ -58,30 +68,27 @@ std::vector<double> MipVarArray(long long n, std::vector<long double> buying_pri
   //LOG(INFO) << "Solution:";
   //LOG(INFO) << "Optimal objective value = " << objective->Value();
 
-  for (int j = 0; j < n; ++j) {
-    //LOG(INFO) << "x[" << j << "] = " << x[j]->solution_value();
+  for (int j = 0; j <n; ++j) {
     solution.push_back(x[j]->solution_value());
   }
-  return solution;
-}
+  return(solution);
 
+}
 }  // namespace optimizer
 
-void RestockingSuggestion::enter(Shop* shop) {}
-void RestockingSuggestion::exit(Shop* shop) {}
-
- 
-// For Debugging
 /*
+// For Debugging
 int main(int argc, char** argv) {
   std::vector<double>solution;
   long long n = 5;
-  long double capital = 100000;
-  std::vector<long double> selling_price = {100,200,50,20,10};
-  std::vector<long double> buying_price = {80,160,40,12,7};
-  std::vector<long double> holding_cost = {20,30,40,50,60};
-  std::vector<long long> forecast = {10,15,20,25,40};
-  solution = optimizer::MipVarArray(n,buying_price,selling_price,holding_cost,forecast,capital);
+  long double capital = 10000;
+  std::vector<long long> solution;
+  std::vector<long double> selling_price = {100,200,50,20,100};
+  std::vector<long double> buying_price = {80,160,40,12,70};
+  std::vector<long double> holding_cost = {2,3,4,5,6};
+  std::vector<long long> forecast = {100,150,200,250,400};
+  std::vector<long long> current_inventory = {50,100,100,100,200};
+  solution = optimizer::MipVarArray(current_inventory,buying_price,selling_price,holding_cost,forecast,capital);
   for (int i =0 ;i<n;i++){
     std::cout<<solution[i]<<std::endl;
   }
