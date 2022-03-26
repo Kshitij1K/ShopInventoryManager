@@ -13,4 +13,5 @@ class RestockingSuggestion : public ShopState {
   RestockingSuggestion();
   RestockingSuggestion(const RestockingSuggestion& other);
   RestockingSuggestion& operator=(const RestockingSuggestion& other);
+  void MipVarArray(std::vector<long long> current_inventory, std::vector<long double> buying_price, std::vector<long double> selling_price, std::vector<long double> holding_cost, std::vector<long long> forecast, long double capital);
 };
