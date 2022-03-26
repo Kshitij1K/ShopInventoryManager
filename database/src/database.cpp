@@ -59,7 +59,7 @@ static int callback1(void *data, int argc, char** argv, char** azColName)
 
 
 // void Database::updateEmployeeLogin(std::string employee_name, std::string time) 
-void Database::updateEmployeeLogin(std::string employee_name, std::string time,std::string date="")
+void Database::updateEmployeeLogin(std::string employee_name, std::string time,std::string date)
 {
     string name = employee_name;
     sqlite3* DB;
@@ -110,7 +110,7 @@ void Database::updateEmployeeLogin(std::string employee_name, std::string time,s
 }
 
 // void Database::updateEmployeeLogout(std::string employee_name, std::string time) 
-void Database::updateEmployeeLogout(string name, std::string time,string date="") 
+void Database::updateEmployeeLogout(string name, std::string time,string date) 
 {
     sqlite3* DB;
 	int exit = 0;
@@ -214,7 +214,7 @@ AttendanceRecord Database::getEmployeeAttendance(std::string employee_name, std:
 
 }
 
-ItemUpdateResults Database::addNewItem(Item new_item,long long int stock = 0) 
+ItemUpdateResults Database::addNewItem(Item new_item,long long int stock) 
 {
     sqlite3* DB;
 	int exit = 0;
