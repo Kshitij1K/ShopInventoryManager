@@ -231,7 +231,7 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
     string insert_1 = "INSERT INTO Item_Info VALUES(";
     string insert_id = to_string(new_item.item_id);
     string insert_name = new_item.item_name;
-    string insert_price = to_string(new_item.price);
+    string insert_price = to_string(new_item.selling_price);
     string stock_val = to_string(stock);
     // string 
 
@@ -320,7 +320,7 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
 
     string current_id = to_string(new_item.item_id);
     string current_name = new_item.item_name;
-    string current_price = to_string(new_item.price);
+    string current_price = to_string(new_item.selling_price);
     string stock_diff = to_string(diff);
 
     char* messaggeError =NULL;

@@ -19,6 +19,9 @@ class Shop {
   bool are_credentials_correct;
   bool is_admin_login;
 
+  Item item_for_update;
+  long long int item_stock_update;
+
   Database database;
 
   void callEvent(ShopState::Event event);

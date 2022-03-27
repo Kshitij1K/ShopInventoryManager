@@ -27,7 +27,9 @@ public:
     void updateItemsRequested();
     void recommendationPageRequested();
     void adminBackButtonPressed();
+    
     void suggestionAsked();
+    void addNewItem();
 
     void prepareStockInfoTable();
 

@@ -17,8 +17,8 @@ void ItemUpdate::eventCalled(Event event, Shop* shop) {
   //   shop->setState(RestockingSuggestion::getInstance());
   //   break;
 
-  case ShopState::Event::kItemUpdateCalled:
-    shop->setState(ItemUpdate::getInstance());
+  case ShopState::Event::kNewItemAdded:
+    shop->database.addNewItem(shop->item_for_update, shop->item_stock_update);
     break;
 
   case ShopState::Event::kEmployeeAttendanceCalled:

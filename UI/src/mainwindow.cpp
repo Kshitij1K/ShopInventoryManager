@@ -24,15 +24,16 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->Back_Button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
 
     QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
+    QObject::connect(ui->Add_Button, &QPushButton::clicked, this, &MainWindow::addNewItem);
 
-    // ui->Stock_Information_Table->setModel(&stock_info_model);
+    // ui->stock_info_table->setModel(&stock_info_model);
 
-    // ui->Stock_Information_Table->insertRow(2);
-    // ui->Stock_Information_Table->setRowCount(10);
-    // ui->Stock_Information_Table->setColumnCount(4);
+    // ui->stock_info_table->insertRow(2);
+    // ui->stock_info_table->setRowCount(10);
+    // ui->stock_info_table->setColumnCount(4);
     // QStringList k = {"yo, u, i, o"};
-    // ui->Stock_Information_Table->setHorizontalHeaderLabels(k);
-    // ui->Stock_Information_Table->
+    // ui->stock_info_table->setHorizontalHeaderLabels(k);
+    // ui->stock_info_table->
 }
 
 MainWindow::~MainWindow()
@@ -68,14 +69,26 @@ void MainWindow::stockInfoRequested() {
     ui->stackedWidget->setCurrentIndex(2);
     shop_->callEvent(ShopState::Event::kStockInfoCalled);
     prepareStockInfoTable();
-    // ui->Stock_Information_Table->setRows()
+    // ui->stock_info_table->setRows()
 }
 
-// void MainWindow::employeeListRequested() {
-//     ui->stackedWidget->setCurrentIndex(2);
-//     shop_->callEvent(ShopState::Event::kEmployeeAttendanceCalled);
-//     ui->employee_list_table->setModel(&employee_attendance);
-// }
+void MainWindow::addNewItem() {
+    shop_->item_for_update.item_id = ui->Item_ID_Line_Edit->text().toLongLong();
+    shop_->item_for_update.item_name = ui->Item_Name_line_edit->text().toStdString();
+    shop_->item_for_update.buying_price = ui->Buying_Price_line_edit->text().toFloat();
+    shop_->item_for_update.selling_price = ui->Selling_Price_line_edit->text().toFloat();
+    shop_->item_for_update.holding_price = ui->Holding_Price_line_edit->text().toFloat();
+    shop_->item_stock_update = ui->Stock_Change_Line_Edit->text().toLongLong();
+    shop_->callEvent(ShopState::Event::kNewItemAdded);
+
+    ui->Item_ID_Line_Edit->clear();
+    ui->Item_Name_line_edit->clear();
+    ui->Buying_Price_line_edit->clear();
+    ui->Selling_Price_line_edit->clear();
+    ui->Holding_Price_line_edit->clear();
+    ui->Stock_Change_Line_Edit->clear();
+
+}
 
 void MainWindow::recommendationPageRequested() {
     ui->stackedWidget->setCurrentIndex(4);
@@ -98,12 +111,12 @@ void MainWindow::suggestionAsked() {
 }
 
 void MainWindow::prepareStockInfoTable() {
-    // ui->Stock_Information_Table->setColumnCount(4);
-    ui->Stock_Information_Table->setRowCount(10);
-    ui->Stock_Information_Table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // ui->Stock_Information_Table->verticalHeader()->setHidden(true);
+    // ui->stock_info_table->setColumnCount(4);
+    ui->stock_info_table->setRowCount(10);
+    ui->stock_info_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // ui->stock_info_table->verticalHeader()->setHidden(true);
     auto k = new QTableWidgetItem(QString("Test data"));
-    ui->Stock_Information_Table->setItem(0, 0, k);
+    ui->stock_info_table->setItem(0, 0, k);
     // QStringList column_names = {"Item ID", "Item Name", "Item Price", "Item Profit/Loss"};
 
 }

@@ -17,7 +17,9 @@ enum class ItemUpdateResults {
 struct Item {
   long long int item_id;
   std::string item_name;
-  float price;
+  float selling_price;
+  float buying_price;
+  float holding_price;
 };
 
 class Database {
