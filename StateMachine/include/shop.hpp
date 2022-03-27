@@ -6,6 +6,7 @@
 class Shop {
  public:
   Shop();
+  ~Shop();
 
   inline ShopState* getCurrentState() const { return current_state_; }
   void setState(ShopState& new_state);

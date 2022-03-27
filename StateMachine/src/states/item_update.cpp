@@ -5,8 +5,12 @@ ShopState& ItemUpdate::getInstance() {
   return singleton;
 }
 
-void ItemUpdate::enter(Shop* shop) {}
-void ItemUpdate::exit(Shop* shop) {}
+void ItemUpdate::enter(Shop* shop) {
+  std::cout << "Entered state ItemUpdate\n";
+}
+void ItemUpdate::exit(Shop* shop) {
+  std::cout << "Exited state ItemUpdate\n";
+}
 
 ItemUpdate::ItemUpdate() {}
 
@@ -19,6 +23,10 @@ void ItemUpdate::eventCalled(Event event, Shop* shop) {
 
   case ShopState::Event::kNewItemAdded:
     shop->database.addNewItem(shop->item_for_update, shop->item_stock_update);
+    break;
+
+  case ShopState::Event::kItemStockUpdated:
+    shop->database.updateStock(shop->item_for_update, shop->item_stock_update);
     break;
 
   case ShopState::Event::kEmployeeAttendanceCalled:

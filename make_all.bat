@@ -1,3 +1,7 @@
+cd Database/build
+make
+cd ../..
+
 cd StateMachine/build
 make
 cd ../..

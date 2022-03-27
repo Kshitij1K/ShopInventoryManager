@@ -30,6 +30,7 @@ public:
     
     void suggestionAsked();
     void addNewItem();
+    void updateItemStock();
 
     void prepareStockInfoTable();
 

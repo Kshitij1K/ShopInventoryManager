@@ -15,3 +15,7 @@ void Shop::setState(ShopState& new_state) {
 void Shop::callEvent(ShopState::Event event) {
   current_state_->eventCalled(event, this);
 }
+
+Shop::~Shop() {
+  current_state_->exit(this);
+}

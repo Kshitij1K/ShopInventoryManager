@@ -5,8 +5,12 @@ ShopState& AdminOptionSelection::getInstance() {
   return singleton;
 }
 
-void AdminOptionSelection::enter(Shop* shop) {}
-void AdminOptionSelection::exit(Shop* shop) {}
+void AdminOptionSelection::enter(Shop* shop) {
+  std::cout << "Entered state AdminOptionSelection\n";
+}
+void AdminOptionSelection::exit(Shop* shop) {
+  std::cout << "Exited state AdminOptionSelection\n";
+}
 
 void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
   switch (event)

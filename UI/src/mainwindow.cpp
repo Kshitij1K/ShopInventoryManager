@@ -17,6 +17,7 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->stock_info_button, &QPushButton::clicked, this, &MainWindow::stockInfoRequested);
     // QObject::connect(ui->employee_list_button, &QPushButton::clicked, this, &MainWindow::employeeListRequested);
     QObject::connect(ui->Update_Item_Information, &QPushButton::clicked, this, &MainWindow::updateItemsRequested);
+    QObject::connect(ui->Update_Button, &QPushButton::clicked, this, &MainWindow::updateItemStock);
     QObject::connect(ui->recommendation_system_button, &QPushButton::clicked, this, &MainWindow::recommendationPageRequested);
     
     QObject::connect(ui->restocking_suggestion_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
@@ -90,6 +91,23 @@ void MainWindow::addNewItem() {
 
 }
 
+void MainWindow::updateItemStock() {
+    shop_->item_for_update.item_id = ui->Item_ID_Line_Edit->text().toLongLong();
+    shop_->item_for_update.item_name = ui->Item_Name_line_edit->text().toStdString();
+    shop_->item_for_update.buying_price = ui->Buying_Price_line_edit->text().toFloat();
+    shop_->item_for_update.selling_price = ui->Selling_Price_line_edit->text().toFloat();
+    shop_->item_for_update.holding_price = ui->Holding_Price_line_edit->text().toFloat();
+    shop_->item_stock_update = ui->Stock_Change_Line_Edit->text().toLongLong();
+    shop_->callEvent(ShopState::Event::kItemStockUpdated);
+
+    ui->Item_ID_Line_Edit->clear();
+    ui->Item_Name_line_edit->clear();
+    ui->Buying_Price_line_edit->clear();
+    ui->Selling_Price_line_edit->clear();
+    ui->Holding_Price_line_edit->clear();
+    ui->Stock_Change_Line_Edit->clear();
+}
+
 void MainWindow::recommendationPageRequested() {
     ui->stackedWidget->setCurrentIndex(4);
     shop_->callEvent(ShopState::Event::kRestockSuggestionCalled);
@@ -102,7 +120,7 @@ void MainWindow::adminBackButtonPressed() {
 
 void MainWindow::updateItemsRequested() {
     ui->stackedWidget->setCurrentIndex(3);
-    // shop_->callEvent(ShopState::Event::kExitCalled);
+    shop_->callEvent(ShopState::Event::kItemUpdateCalled);
 }
 
 

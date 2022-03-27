@@ -6,8 +6,11 @@ ShopState& Login::getInstance() {
 }
 
 void Login::enter(Shop* shop) {
+  std::cout << "Entered State Login\n";
 }
 void Login::exit(Shop* shop) {
+  std::cout << "Exited State Login\n";
+
 }
 
 void Login::eventCalled(Event event, Shop* shop) {
