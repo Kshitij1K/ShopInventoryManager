@@ -6,6 +6,7 @@
 // The list consists of pairs of login and logout times. The first string is for
 // the login time, and the second one is for the logout time
 typedef std::list<std::pair<std::string, std::string>> AttendanceRecord;
+typedef std::list<std::pair<Item, long long int>> ItemStocks;
 
 enum class ItemUpdateResults {
   kExists,
@@ -40,4 +41,14 @@ class Database {
 
   void updateItemsSold(Item item, std::string date, long long int quantity);
   long long int getItemsSold(Item item, std::string date);
+
+  ItemStocks getAllItemStocks();  
 };
+
+/*
+* Stuff to implement in database
+* Implement getAllItemStocks()
+* Implement forecasting data storage and retrieval
+* Add the buying price and holding price column to database
+* Change hardcoded location of database
+*/
