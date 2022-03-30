@@ -8,7 +8,6 @@ using namespace std;
 
 
 
-
 //for getting attendance data
 struct Data_v
 {
@@ -60,7 +59,7 @@ static int callback(void* data, int argc, char** argv, char** azColName)
 
 
 
-
+//function returns rows of data where each column is data mapped to column value
 static int callback1(void *data, int argc, char** argv, char** azColName)
 {
     int i;
@@ -241,7 +240,7 @@ static int callback3_getting_Predict_data(void *data, int argc, char** argv, cha
 }
 
 
-
+//getting Item_ID list where name is input in Item_Info table
 static int callback4_getting_Item_ID(void *data, int argc, char** argv, char** azColName)
 {
     int i;
@@ -278,13 +277,47 @@ static int callback4_getting_Item_ID(void *data, int argc, char** argv, char** a
 
 
 
-sqlite3* Database::establish_connection()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+sqlite3* Database::establish_connection(int &exit)
 {
     sqlite3* DB;
-	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
     exit = sqlite3_open(this->databse_var.c_str(),&DB);
-
 	if (exit) {
 		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
 		// return (-1);
@@ -303,20 +336,92 @@ sqlite3* Database::establish_connection()
 
 
 
-//   Predict_record retrieve_predict_data_basis_of_id(long long int); //search on basis of item_id
+//   void Insert_predict_data(Predict_data_type input_1);
+void Database:: Insert_predict_data(Predict_data_type input_1)
+{
+
+    //conection establishment
+    sqlite3* DB;
+	int exit = 0;
+	DB = this->establish_connection(exit);
+    string item_id;
+
+    // INSERT INTO Predict_Table VALUES(1,0.1,0.2,0.4,0.2);
+
+
+
+
+
+
+
+    string query = "";
+    string insert_1 = "INSERT INTO Predict_Table VALUES(";
+    string insert_id = to_string(input_1.item_id);
+    string insert_smoothed = to_string( input_1.Smoothed_error);
+    string insert_Forecast = to_string(input_1.Forecast);
+    string insert_madt = to_string(input_1.MADt);
+    string insert_T = to_string(input_1.T);
+    
+    // string 
+
+    char* messaggeError =NULL;
+
+    string sql = insert_1+insert_id+ ","+insert_smoothed+","+insert_Forecast+","+insert_madt+","+insert_T +");";
+
+    cout<<endl<<"SQL Query :"<<sql<<endl;
+
+    // // struct Data_v *get_ans = new Data_v() ;
+    // // get_ans->sisze = 0;
+	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messaggeError);
+	// // exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+
+    // string match = "UNIQUE constraint failed: Item_Info.ID";
+    string match ="UNIQUE constraint failed: Predict_Table.Item_Id, Predict_Table.Smoothed_Error, Predict_Table.Forecast, Predict_Table.MADt, Predict_Table.T";
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+        
+
+
+    if (exit != SQLITE_OK)
+        cout << "Error in Insertion" << endl;
+    else {
+        cout << "Operation OK!" << endl;
+    }
+
+
+    cout<<endl<<"Exn Output Message "<<string_message <<endl;
+
+    if (string_message.compare(match)==0)
+    {
+        cout<<"\nData Duplication Problem, Insertion Failed \n";
+    }
+    else 
+        cout<<"\nInsertion Done";
+
+	sqlite3_close(DB);
+    // return return_val;
+
+
+
+
+
+}
 
 Predict_record Database:: retrieve_predict_data_basis_of_name(string name) //search on basis of item name
 {
          //connection establised
     sqlite3* DB;
 	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
+	DB = this->establish_connection(exit);
 
 
 
@@ -326,24 +431,6 @@ Predict_record Database:: retrieve_predict_data_basis_of_name(string name) //sea
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// struct Data_Item_List
-// {
-// 	int sisze ;
-//     vector<string>data ;
-// };
-
-//     string id_val = to_string(id);
     string query = "";
     query = "SELECT ID FROM Item_Info WHERE name = '"+name + "';";
     cout<<endl<<"SQL Query :"<<query<<endl;
@@ -434,15 +521,8 @@ Predict_record Database:: retrieve_predict_data_basis_of_id(long long int id) //
         //connection establised
     sqlite3* DB;
 	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
-
-
+	DB = this->establish_connection(exit);
+  
 
 
 
@@ -522,14 +602,19 @@ void Database::updateEmployeeLogin(std::string employee_name, std::string time,s
     //connection establised
     sqlite3* DB;
 	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		return ;
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
+	DB = this->establish_connection(exit);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -580,14 +665,14 @@ void Database::updateEmployeeLogout(string name, std::string time,string date)
     //connection establised
     sqlite3* DB;
 	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		return ;
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
+    DB = this->establish_connection(exit);
+
+
+
+
+
+
+
 
 
 
@@ -642,15 +727,21 @@ AttendanceRecord Database::getEmployeeAttendance(std::string employee_name, std:
 {
     sqlite3* DB;
 	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
+	DB = this->establish_connection(exit);
 
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		// return (-1);
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -688,7 +779,6 @@ AttendanceRecord Database::getEmployeeAttendance(std::string employee_name, std:
     sqlite3_close(DB);
     return ans1 ;
 
-
 }
 
 ItemUpdateResults Database::addNewItem(Item new_item,long long int stock) 
@@ -696,14 +786,27 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
     //connection establised
     sqlite3* DB;
 	int exit = 0;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		// return (-1);
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
+	
+    DB = this->establish_connection(exit);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -716,15 +819,15 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
     string insert_name = new_item.item_name;
     string insert_price = to_string(new_item.selling_price);
     string stock_val = to_string(stock);
+
+    string holding_value = to_string(new_item.holding_price);
+    string buying_value = to_string(new_item.buying_price);
     // string 
 
     char* messaggeError =NULL;
 
-    string sql = insert_1+insert_id+ ",'"+insert_name+"',"+insert_price+","+stock_val +");";
+    string sql = insert_1+insert_id+ ",'"+insert_name+"',"+insert_price+","+stock_val+","+holding_value+","+buying_value +");";
 
-	// string sql("INSERT INTO Item_Info VALUES(5, 'Doritos' ,30 ,12);"
-    //            "INSERT INTO Item_Info VALUES(6, 'Oreos' ,30,11 );"
-    //            "INSERT INTO Item_Info VALUES(7, 'Oreos' ,10 ,13);");
 
     struct Data_v *get_ans = new Data_v() ;
     get_ans->sisze = 0;
@@ -768,11 +871,13 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
 
     	exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
         cout<<endl;
-        string temp4_name="",temp5_stock="" ;
+        string temp4_name="",temp5_stock="",temp6_hold = "",temp7_buy = "" ;
         for (auto i1: get_ans->data ) //select data from query
         {	
             temp4_name = i1["name"] ;
             temp5_stock = i1["stock"];
+            temp6_hold = i1["Holding_value"];
+            temp7_buy = i1["Buying_value"];
         }
 
         // compare name and table data 
@@ -792,23 +897,28 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
     //connection establised
      sqlite3* DB;
 	int exit = 0;
+	DB = this->establish_connection(exit);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     long long int sto_1 ;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		// return (-1);
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
-
-
-
-
-
-
-
-
     string current_id = to_string(new_item.item_id);
     string current_name = new_item.item_name;
     string current_price = to_string(new_item.selling_price);
@@ -817,6 +927,7 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
     char* messaggeError =NULL;
 
     string query = "SELECT * FROM Item_Info Where Item_Info.ID = "+current_id +";";
+    cout<<endl<<"Sql Query :"<<query<<endl;
 
     struct Data_v *get_ans = new Data_v() ;
     get_ans->sisze = 0;
@@ -855,7 +966,7 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
         temp4_stock = i1["stock"];
 		// cout<<endl;
 	}
-    // cout<<" "<<temp1_id<<" "<<temp2_name<<" "<<temp3_price<<" "<<temp4_stock;
+    // cout<<" "<<temp1_id<<" "<<temp2_name<<" "<<temp3_price<<" "<<temp4_stock<<endl;
 
     ItemUpdateResults return_val = ItemUpdateResults::kDoesNotExist;
 
@@ -879,9 +990,10 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
             return return_val ;
 
         }
-        else if(temp4_stock>stock_diff)
+        else if(temp4_stock<stock_diff)
         {
             // stock not available 
+            cout<<" "<<temp4_stock<<" "<<stock_diff<<endl;
             return_val = ItemUpdateResults::kStockNegative; 
            	sqlite3_close(DB);
             return return_val ;
@@ -940,26 +1052,30 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
     //connection establised
     sqlite3* DB;
 	int exit = 0;
+	DB = this->establish_connection(exit);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     long long int sto_1 ;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		// return (-1);
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
-
-
-
-
-
     char* messaggeError =NULL;
     string insert_1 = "INSERT INTO Sold_by_date VALUES(";
     // string item_id_1 = to_string(Item_id);
     string item_id_1 = to_string(item.item_id);
-
     string quan_tity = to_string(quantity);
 
     // INSERT INTO Sold_by_date VALUES(2,24,"2022-03-07");
@@ -967,9 +1083,7 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
 
     string query  = insert_1+item_id_1+","+quan_tity+","+"\""+date+"\");" ;
     cout<<"\n SQLQuery: "<<query<<endl ;
-    // struct Data_v *get_ans = new Data_v() ;
-    // get_ans->sisze = 0;
-
+ 
 
 	exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &messaggeError);
     // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
@@ -991,8 +1105,6 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
     {
         string_message = messaggeError;
     }
-        
-
 
     cout<<"\nOutput Message "<<string_message<<endl;
     string temp1 = "UNIQUE constraint failed: Sold_by_date.Item_Id, Sold_by_date.Date_val";
@@ -1000,7 +1112,6 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
     {
         cout<<endl<<"Data of same ID and Date Already exists in Database";
         sqlite3_close(DB);
-
         return ;
     }
     
@@ -1025,8 +1136,6 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
     else {
         cout << "Operation OK!" << endl;
     }
-
-
 
     if (messaggeError==NULL)
     {
@@ -1086,7 +1195,6 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
                 
             cout<<"\nOutput Message "<<string_message<<endl;
 
-
     }
     // cout<<" "<<s1.size();
     // cout<<endl<<*s1.begin();
@@ -1098,23 +1206,30 @@ long long int Database::getItemsSold(Item item, std::string date)
     //connection establised
     sqlite3* DB;
 	int exit = 0;
+
+    DB = this->establish_connection(exit);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     long long int sto_1 ;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
     string query ;
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		// return (-1);
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
-
-
-
-
-
-
-
     long long int Item_id = item.item_id;
     char* messaggeError =NULL;
     struct Data_v *get_ans = new Data_v() ;
@@ -1139,7 +1254,6 @@ long long int Database::getItemsSold(Item item, std::string date)
 		cout<<endl<<quantity_1<<endl;
 	}
 
-
     std::string string_message;
     if (messaggeError==NULL)
     {
@@ -1150,9 +1264,6 @@ long long int Database::getItemsSold(Item item, std::string date)
     {
         string_message = messaggeError;
     }
-        
-
-
     cout<<"\nOutput Message "<<string_message<<endl;
     sqlite3_close(DB);
     long long int val = stoll(quantity_1);
@@ -1166,16 +1277,28 @@ ItemStocks Database:: getAllItemStocks()
         //connection establised
     sqlite3* DB;
 	int exit = 0;
-    long long int sto_1 ;
-	// exit = sqlite3_open("Db1test", &DB);
-    exit = sqlite3_open(this->databse_var.c_str(),&DB);
-    string query ;
-	if (exit) {
-		std::cout << "Error open DB " << sqlite3_errmsg(DB) << std::endl;
-		// return (-1);
-	}
-	else
-		std::cout << "Opened Database Successfully!" << std::endl;
+
+    DB = this->establish_connection(exit);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1189,7 +1312,8 @@ ItemStocks Database:: getAllItemStocks()
 
 
 
-
+    string query ;
+    long long int sto_1 ;
     // typedef std::list<std::pair<Item, long long int>> ItemStocks;
 
     ItemStocks ans1;
@@ -1269,44 +1393,128 @@ ItemStocks Database:: getAllItemStocks()
 //testing
 
 
+int main(int argc, char const *argv[])
+{
+    Database d1 ;
+    // AttendanceRecord ans = d1.getEmployeeAttendance("Sandeep Reddy","2022-03-09");
 
-
-// int main(int argc, char const *argv[])
-// {
-//     Database d1 ;
-//     // AttendanceRecord ans = d1.getEmployeeAttendance("Sandeep Reddy","2022-03-09");
-
-//     // for (auto x : ans)
-//     // {
-//     //     cout<<"\n"<<x.first<<" "<<x.second ;
-//     // }
+    // for (auto x : ans)
+    // {
+    //     cout<<"\n"<<x.first<<" "<<x.second ;
+    // }
 
 
 
 
 
 
-//     // ItemStocks a1 = d1.getAllItemStocks();
+    // ItemStocks a1 = d1.getAllItemStocks();
 
-//     // for (auto x : a1)
-//     // {
-//     //     cout<<"\n"<<x.first.item_id<<" "<<x.first.item_name<<" "<<x.first.selling_price<<" "<<x.second<<" "<<x.first.holding_price <<" "<<x.first.buying_price ;   
-//     // }
+    // for (auto x : a1)
+    // {
+    //     cout<<"\n"<<x.first.item_id<<" "<<x.first.item_name<<" "<<x.first.selling_price<<" "<<x.second<<" "<<x.first.holding_price <<" "<<x.first.buying_price ;   
+    // }
     
-//     // Predict_record a2 = d1.retrieve_predict_data_basis_of_id(4);
-//     // for (auto x :a2)
-//     // {
-//     //     cout<<x.item_id<<" "<<x.Smoothed_error<<" "<<x.Forecast<<" "<<x.MADt<<" "<<" "<<x.T<<endl;
-//     // }
+    // Predict_record a2 = d1.retrieve_predict_data_basis_of_id(4);
+    // for (auto x :a2)
+    // {
+    //     cout<<x.item_id<<" "<<x.Smoothed_error<<" "<<x.Forecast<<" "<<x.MADt<<" "<<" "<<x.T<<endl;
+    // }
     
-//     Predict_record a2 = d1.retrieve_predict_data_basis_of_name("Maggi");
-//     for (auto x :a2)
-//     {
-//         cout<<x.item_id<<" "<<x.Smoothed_error<<" "<<x.Forecast<<" "<<x.MADt<<" "<<" "<<x.T<<endl;
-//     }
-//     return 0;
-// }
+    // Predict_record a2 = d1.retrieve_predict_data_basis_of_name("Maggi");
+    // for (auto x :a2)
+    // {
+    //     cout<<x.item_id<<" "<<x.Smoothed_error<<" "<<x.Forecast<<" "<<x.MADt<<" "<<" "<<x.T<<endl;
+    // }
 
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Item a1 ;
+    a1.item_id = 1;
+    // long long int ans =  d1.getItemsSold(a1,"2022-03-05");
+    // cout<<endl<<"Quantities Sold "<<ans<<endl;
+
+    // d1.updateItemsSold(a1,"2022-03-10",21);
+
+
+    a1.item_id = 7;
+    a1.item_name = "Oreos" ;
+    a1.selling_price = 10 ;
+    // a1.
+
+
+
+    // ItemUpdateResults oupt1 =  d1.updateStock(a1,17);
+    // if (oupt1==ItemUpdateResults::kExists)
+    // {        cout<<"Exists";    }
+    
+    // else if (oupt1==ItemUpdateResults::kDoesNotExist)
+    // {        cout<<"Data ID Does not exist";    }
+    // else if (oupt1==ItemUpdateResults::kExistsWithDiffName)
+    // { cout<<"Item Does exist,With different Name ";}
+    // else if (oupt1==ItemUpdateResults::kStockNegative)
+    // { cout<<"Item Does exist,Demand more stocks but not present in table ";}
+    
+
+
+
+    // d1.updateStock(a1,-7);
+
+
+
+
+
+    // a1.item_id = 26;
+    // a1.item_name = "Lays-Tomato" ;
+    // a1.selling_price = 10 ;
+
+    // a1.buying_price =7 ;
+    // a1.holding_price = 10;
+    // d1.addNewItem(a1,17);
+
+
+
+
+
+
+
+
+
+//     AttendanceRecord an1 = d1.getEmployeeAttendance("Sandeep Reddy","2022-03-09");
+
+// // typedef std::list<std::pair<std::string, std::string>> AttendanceRecord;
+//     for (auto x :  an1)
+//         cout<<"\n"<<x.first<<" "<<x.second;
+    
+    // Predict_data_type in1 ;
+    // in1.item_id = 11 ;
+    // in1.Forecast = .2 ;
+    // in1.MADt = 0.2 ;
+    // in1.Smoothed_error = 0.2;
+    // in1.T = 0.2;
+    // d1.Insert_predict_data(in1);
+
+
+    return 0;
+}
+
+
+
+// g++ database.cpp -l sqlite3 -o run1
