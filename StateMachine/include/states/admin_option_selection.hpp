@@ -8,13 +8,18 @@ class AdminOptionSelection : public ShopState {
   void exit(Shop* shop);
   static ShopState& getInstance();
   void eventCalled(Event event, Shop* shop);
+  std::vector<double> smoothed_error;
+  std::vector<double> MADt;
+  std::vector<double> forecast;
+  std::vector<double> T;
+  std::vector<double> demand;
 
  private:
   AdminOptionSelection();
   AdminOptionSelection(const AdminOptionSelection& other);
   AdminOptionSelection& operator=(const AdminOptionSelection& other);
-  std::vector<long double> update_smoothed_error(double alpha, std::vector<long double> smoothed_error_prev, std::vector<long double>forecast_prev, std::vector<long double>demand_prev  );
-  std::vector<long double> update_MADt(double alpha, std::vector<long double> MADt_prev, std::vector<long double> forecast_prev, std::vector<long double> demand_prev);
-  std::vector<long double> T_calculater(std::vector<long double> smoothed_error, std::vector<long double> MADt);
-  std::vector<long double> forecast(std::vector<long double> smoothed_error, std::vector<long double> MADt, std::vector<long double> forecast_prev, std::vector<long double> demand_prev, std::vector<long double> T);
+  void update_smoothed_error();
+  void update_MADt();
+  void T_calculater();
+  void update_forecast();
 };

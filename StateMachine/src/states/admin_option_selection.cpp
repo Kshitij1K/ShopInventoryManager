@@ -19,6 +19,10 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
   //   shop->setState(RestockingSuggestion::getInstance());
   //   break;
 
+  case ShopState::Event::kForecastUpdateCalled:
+    //shop->database.Insert_predict_data();
+    break;
+
   case ShopState::Event::kItemUpdateCalled:
     shop->setState(ItemUpdate::getInstance());
     break;
@@ -42,48 +46,51 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
 
 AdminOptionSelection::AdminOptionSelection(){}
 
- std::vector<long double> AdminOptionSelection::update_smoothed_error(double alpha, std::vector<long double> smoothed_error_prev, std::vector<long double>forecast_prev, std::vector<long double>demand_prev  ){
-        std::vector<long double> smoothed_error;
-        long long n = smoothed_error_prev.size();
-        for (int i =0; i<n;i++){
-            long double error = demand_prev[i]-forecast_prev[i];
-            smoothed_error.push_back(alpha*error + (1-alpha)*(smoothed_error_prev[i]) );
-        }
-        return(smoothed_error);
+void AdminOptionSelection::update_smoothed_error( ){
+    //std::vector<long double> smoothed_error;
+    double alpha = 0.3;
+    long long n = smoothed_error.size();
+    for (int i =0; i<n;i++){
+        double error = demand[i]- forecast[i];
+        smoothed_error[i] = (alpha*error + (1-alpha)*(smoothed_error[i]) );
     }
+    return;
+}
 
-    std::vector<long double> AdminOptionSelection::update_MADt(double alpha, std::vector<long double> MADt_prev, std::vector<long double> forecast_prev, std::vector<long double> demand_prev){
-        std::vector<long double> MADt;
-        long long n = MADt_prev.size();
-        for (int i=0; i<n; i++){
-            long double error = demand_prev[i]-forecast_prev[i];
-            if(error<0){
-                error = -error;
-            }
-            MADt.push_back(alpha*error + (1-alpha)*(MADt_prev[i]));
+void AdminOptionSelection::update_MADt(){
+    //std::vector<long double> MADt;
+    double alpha = 0.3;
+    long long n = MADt.size();
+    for (int i=0; i<n; i++){
+        double error = demand[i]-forecast[i];
+        if(error<0){
+            error = -error;
         }
-        return(MADt);
+        MADt[i] = (alpha*error + (1-alpha)*(MADt[i]));
     }
+    return;
+}
 
-    std::vector<long double> AdminOptionSelection::T_calculater(std::vector<long double> smoothed_error, std::vector<long double> MADt){
-        long long n = MADt.size();
-        std::vector<long double> T;
-        for (int i =0; i<n; i++){
-            T.push_back(smoothed_error[i]/MADt[i]);
-        }
-        return(T);
+void AdminOptionSelection::T_calculater(){
+    long long n = MADt.size();
+    for (int i =0; i<n; i++){
+        T[i] = (smoothed_error[i]/MADt[i]);
     }
+    return;
+}
 
-    std::vector<long double> AdminOptionSelection::forecast(std::vector<long double> smoothed_error, std::vector<long double> MADt, std::vector<long double> forecast_prev, std::vector<long double> demand_prev, std::vector<long double> T){
-        std::vector<long double> forecast_new;
-        long long n = smoothed_error.size();
-        for (int i=0; i<n; i++){
-            long double T_coeff = T[i];
-            if(T_coeff<0){
-                T_coeff = -T_coeff;
-            }
-            long double error = demand_prev[i] - forecast_prev[i];
-            forecast_new.push_back(forecast_prev[i] + T_coeff*error);
+void AdminOptionSelection::update_forecast(){
+    long long n = smoothed_error.size();
+    update_smoothed_error();
+    update_MADt();
+    T_calculater();
+    for (int i=0; i<n; i++){
+        double T_coeff = T[i];
+        if(T_coeff<0){
+            T_coeff = -T_coeff;
         }
-        return(forecast_new);
+        double error = demand[i] - forecast[i];
+        forecast[i] = (forecast[i] + T_coeff*error);
     }
+    return;
+}

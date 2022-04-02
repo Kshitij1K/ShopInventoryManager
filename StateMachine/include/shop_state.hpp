@@ -12,7 +12,7 @@ class ShopState {
                     kRestockSuggestionCalled,
                     kRestockSuggestionAsked,
                     kStockInfoCalled,
-                    // kItemUpdateCalled,
+                    kForecastUpdateCalled,
                     kNewItemAdded,
                     kItemStockUpdated,
                     kProfitLossCalled,
