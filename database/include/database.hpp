@@ -3,6 +3,7 @@
 #include <string>
 #include <utility>
 #include <sqlite3.h>
+#include <vector>
 
 
 enum class ItemUpdateResults {

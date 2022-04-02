@@ -407,7 +407,7 @@ void Database:: Insert_predict_data(Predict_data_type input_1)
 
 }
 
-Predict_record Database:: retrieve_predict_data_basis_of_name(string name) //search on basis of item name
+Predict_record Database:: retrieve_predict_data_basis_of_name(std::string name) //search on basis of item name
 {
          //connection establised
     sqlite3* DB;

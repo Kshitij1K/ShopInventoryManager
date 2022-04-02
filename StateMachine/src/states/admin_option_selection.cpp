@@ -21,7 +21,37 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
 
   case ShopState::Event::kForecastUpdateCalled:
     //shop->database.Insert_predict_data();
+    {
+    ItemStocks all_items = shop->database.getAllItemStocks();
+    forecast.clear();
+    demand.clear();
+    smoothed_error.clear();
+    MADt.clear();
+    T.clear();
+
+    for (auto currentPair : all_items){
+        forecast.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Forecast);
+        smoothed_error.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Smoothed_error);
+        MADt.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().MADt);
+        T.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().T);
+    }
+
+    update_forecast();
+    long long int i =0;
+    for (auto currentPair : all_items){
+      Predict_data_type item_data;
+      item_data.item_id = currentPair.first.item_id;
+      item_data.Forecast = forecast[i];
+      item_data.MADt = MADt[i];
+      item_data.Smoothed_error = smoothed_error[i];
+      item_data.T = T[i];
+      shop->database.Insert_predict_data(item_data);
+
+      i++;
+    }
+
     break;
+    }
 
   case ShopState::Event::kItemUpdateCalled:
     shop->setState(ItemUpdate::getInstance());

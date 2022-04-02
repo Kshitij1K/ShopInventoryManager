@@ -15,6 +15,26 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
     shop->setState(AdminOptionSelection::getInstance());
     break;
   
+  case ShopState::Event::kRestockSuggestionAsked:
+  {
+    ItemStocks all_items = shop->database.getAllItemStocks();
+    std::vector<double> buying_price;
+    std::vector<long long> current_inventory;
+    std::vector<double> selling_price;
+    std::vector<double> holding_cost;
+    std::vector<double> forecast;
+    for (auto current_pair : all_items){
+        Item item = current_pair.first;
+        current_inventory.push_back(current_pair.second);
+        buying_price.push_back(item.buying_price);
+        selling_price.push_back(item.selling_price);
+        holding_cost.push_back(item.holding_price);
+        forecast.push_back(shop->database.retrieve_predict_data_basis_of_id(item.item_id).front().Forecast);
+        shop->restocking_solution = MipVarArray(current_inventory,buying_price,selling_price,holding_cost,forecast,shop->restocking_capital_available);
+
+    }
+    break;
+  }
   default:
     break;
   }
@@ -22,7 +42,7 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
 
 RestockingSuggestion::RestockingSuggestion() {}
 
-void RestockingSuggestion::MipVarArray(std::vector<long long> current_inventory, std::vector<long double> buying_price, std::vector<long double> selling_price, std::vector<long double> holding_cost, std::vector<long long> forecast, long double capital) {
+std::vector<double> RestockingSuggestion::MipVarArray(std::vector<long long> current_inventory, std::vector<double> buying_price, std::vector<double> selling_price, std::vector<double> holding_cost, std::vector<double> forecast, long double capital) {
   // Create the mip solver with the SCIP backend.
   std::unique_ptr<MPSolver> solver(MPSolver::CreateSolver("SCIP"));
   if (!solver) {

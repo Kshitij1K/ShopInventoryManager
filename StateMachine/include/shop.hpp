@@ -16,6 +16,7 @@ class Shop {
   long long int restocking_capital_available;
   long long int scanned_item_id;
   std::vector<std::pair<long long int, int>> items_bought;
+  long double capital;
 
   bool are_credentials_correct;
   bool is_admin_login;
@@ -27,6 +28,7 @@ class Shop {
   ItemStocks consumer_cart;
 
   Database database;
+  std::vector<double> restocking_solution;
 
   void callEvent(ShopState::Event event);
 
