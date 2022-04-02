@@ -23,6 +23,8 @@ class Shop {
   Item item_for_update;
   long long int item_stock_update;
 
+  ItemStocks stocks;
+
   Database database;
 
   void callEvent(ShopState::Event event);

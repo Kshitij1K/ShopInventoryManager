@@ -478,12 +478,27 @@ hr { height: 1px; border-width: 0; }
               </column>
               <column>
                <property name="text">
+                <string>Buying Price</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Holding Price</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>Selling Price</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
                 <string>Current Stock</string>
                </property>
               </column>
               <column>
                <property name="text">
-                <string>Profit/Loss</string>
+                <string>Profit</string>
                </property>
               </column>
              </widget>

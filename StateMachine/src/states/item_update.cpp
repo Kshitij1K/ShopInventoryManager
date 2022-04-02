@@ -17,30 +17,19 @@ ItemUpdate::ItemUpdate() {}
 void ItemUpdate::eventCalled(Event event, Shop* shop) {
   switch (event)
   {
-  // case ShopState::Event::kRestockSuggestionCalled:
-  //   shop->setState(RestockingSuggestion::getInstance());
-  //   break;
+    case ShopState::Event::kNewItemAdded:
+      shop->database.addNewItem(shop->item_for_update, shop->item_stock_update);
+      break;
 
-  case ShopState::Event::kNewItemAdded:
-    shop->database.addNewItem(shop->item_for_update, shop->item_stock_update);
-    break;
+    case ShopState::Event::kItemStockUpdated:
+      shop->database.updateStock(shop->item_for_update, shop->item_stock_update);
+      break;
 
-  case ShopState::Event::kItemStockUpdated:
-    shop->database.updateStock(shop->item_for_update, shop->item_stock_update);
-    break;
+    case ShopState::Event::kExitCalled:
+      shop->setState(Login::getInstance());
+      break;
 
-  case ShopState::Event::kEmployeeAttendanceCalled:
-    shop->setState(EmployeeAttendanceDisplay::getInstance());
-    break;
-  
-  case ShopState::Event::kStockInfoCalled:
-    break;
-
-  case ShopState::Event::kExitCalled:
-    shop->setState(Login::getInstance());
-    break;
-
-  default:
-    break;
+    default:
+      break;
   }
 }

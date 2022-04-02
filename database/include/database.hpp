@@ -2,7 +2,7 @@
 #include <list>
 #include <string>
 #include <utility>
-
+#include <sqlite3.h>
 
 
 enum class ItemUpdateResults {
@@ -44,7 +44,7 @@ class Database
 
  public:
 
-  string databse_var = "Dbmain.db";
+  std::string databse_var = "Dbmain.db";
     //added later
   sqlite3* establish_connection(int &);
 
@@ -72,7 +72,7 @@ class Database
 
 
   void Insert_predict_data(Predict_data_type input_1);
-  Predict_record retrieve_predict_data_basis_of_name(string name); //search on basis of item name
+  Predict_record retrieve_predict_data_basis_of_name(std::string name); //search on basis of item name
   Predict_record retrieve_predict_data_basis_of_id(long long int); //search on basis of item_id
 
 };

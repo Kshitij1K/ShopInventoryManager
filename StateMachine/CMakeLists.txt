@@ -16,7 +16,7 @@ find_package(database REQUIRED)
 # add_library(employee_attendance_display src/states/employee_attendance_display.cpp)
 # add_library(employee_portal src/states/employee_portal.cpp)
 # add_library(login src/states/login.cpp)
-# add_library(profit_loss_display src/states/profit_loss_display.cpp)
+# add_library(stock_info src/states/stock_info.cpp)
 # add_library(item_update src/states/item_update.cpp)
 # add_library(restocking_suggestion src/states/restocking_suggestion.cpp)
 
@@ -28,6 +28,7 @@ add_library(
   src/states/login.cpp
   src/states/item_update.cpp
   src/states/employee_attendance_display.cpp
+  src/states/stock_info.cpp
 )
 # target_link_libraries(
 #   ${PROJECT_NAME}
@@ -91,7 +92,7 @@ install(
 # target_link_libraries(employee_attendance_display shop)
 # target_link_libraries(employee_portal shop)
 # target_link_libraries(login shop)
-# target_link_libraries(profit_loss_display shop)
+# target_link_libraries(stock_info shop)
 # target_link_libraries(item_update shop)
 # target_link_libraries(restocking_suggestion shop)
 

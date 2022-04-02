@@ -69,7 +69,7 @@ void MainWindow::logoutButtonPressed() {
 void MainWindow::stockInfoRequested() {
     ui->stackedWidget->setCurrentIndex(2);
     shop_->callEvent(ShopState::Event::kStockInfoCalled);
-    prepareStockInfoTable();
+    prepareStockInfoTable(shop_->stocks);
     // ui->stock_info_table->setRows()
 }
 
@@ -128,14 +128,36 @@ void MainWindow::suggestionAsked() {
     shop_->callEvent(ShopState::Event::kRestockSuggestionAsked);
 }
 
-void MainWindow::prepareStockInfoTable() {
-    // ui->stock_info_table->setColumnCount(4);
-    ui->stock_info_table->setRowCount(10);
+void MainWindow::prepareStockInfoTable(ItemStocks items) {
+    long long int num_items = items.size();
+    ui->stock_info_table->setRowCount(num_items);
     ui->stock_info_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    // ui->stock_info_table->verticalHeader()->setHidden(true);
-    auto k = new QTableWidgetItem(QString("Test data"));
-    ui->stock_info_table->setItem(0, 0, k);
-    // QStringList column_names = {"Item ID", "Item Name", "Item Price", "Item Profit/Loss"};
+    
+    int count = 0;
+    for (auto item_ : items) {
+        long long int stock = item_.second;
+        double profit = stock*(item_.first.selling_price-item_.first.buying_price);
+        
+        auto item_name_disp = new QTableWidgetItem(QString(item_.first.item_name.c_str()));
+        auto holding_price_disp = new QTableWidgetItem(QString(std::to_string(item_.first.holding_price).c_str()));
+        auto buying_price_disp = new QTableWidgetItem(QString(std::to_string(item_.first.buying_price).c_str()));
+        auto selling_price_disp = new QTableWidgetItem(QString(std::to_string(item_.first.selling_price).c_str()));
+        auto item_id_disp = new QTableWidgetItem(QString(std::to_string(item_.first.item_id).c_str()));
+        
+        auto stock_disp = new QTableWidgetItem(QString(std::to_string(stock).c_str()));
+        auto profit_disp = new QTableWidgetItem(QString(std::to_string(profit).c_str()));
+        
+
+        ui->stock_info_table->setItem(count, 0, item_id_disp);
+        ui->stock_info_table->setItem(count, 1, item_name_disp);
+        ui->stock_info_table->setItem(count, 2, buying_price_disp);
+        ui->stock_info_table->setItem(count, 3, holding_price_disp);
+        ui->stock_info_table->setItem(count, 4, selling_price_disp);
+        ui->stock_info_table->setItem(count, 5, stock_disp);
+        ui->stock_info_table->setItem(count, 6, profit_disp);
+
+        count++;
+    }
 
 }
 

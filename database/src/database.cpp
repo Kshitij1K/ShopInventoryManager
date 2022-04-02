@@ -1,4 +1,4 @@
-// #include <database.hpp>
+#include <database.hpp>
 #include <iostream>
 #include <sqlite3.h>
 #include <vector>
@@ -1353,7 +1353,8 @@ ItemStocks Database:: getAllItemStocks()
     }
         
     ans1 = get_ans->data1;
-    free(get_ans);
+    delete get_ans;
+    cout << "line 1357 reached";
     cout<<"\nOutput Message "<<string_message<<endl;
     sqlite3_close(DB);
     return ans1 ;
@@ -1391,130 +1392,6 @@ ItemStocks Database:: getAllItemStocks()
 
 
 //testing
-
-
-int main(int argc, char const *argv[])
-{
-    Database d1 ;
-    // AttendanceRecord ans = d1.getEmployeeAttendance("Sandeep Reddy","2022-03-09");
-
-    // for (auto x : ans)
-    // {
-    //     cout<<"\n"<<x.first<<" "<<x.second ;
-    // }
-
-
-
-
-
-
-    // ItemStocks a1 = d1.getAllItemStocks();
-
-    // for (auto x : a1)
-    // {
-    //     cout<<"\n"<<x.first.item_id<<" "<<x.first.item_name<<" "<<x.first.selling_price<<" "<<x.second<<" "<<x.first.holding_price <<" "<<x.first.buying_price ;   
-    // }
-    
-    // Predict_record a2 = d1.retrieve_predict_data_basis_of_id(4);
-    // for (auto x :a2)
-    // {
-    //     cout<<x.item_id<<" "<<x.Smoothed_error<<" "<<x.Forecast<<" "<<x.MADt<<" "<<" "<<x.T<<endl;
-    // }
-    
-    // Predict_record a2 = d1.retrieve_predict_data_basis_of_name("Maggi");
-    // for (auto x :a2)
-    // {
-    //     cout<<x.item_id<<" "<<x.Smoothed_error<<" "<<x.Forecast<<" "<<x.MADt<<" "<<" "<<x.T<<endl;
-    // }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Item a1 ;
-    a1.item_id = 1;
-    // long long int ans =  d1.getItemsSold(a1,"2022-03-05");
-    // cout<<endl<<"Quantities Sold "<<ans<<endl;
-
-    // d1.updateItemsSold(a1,"2022-03-10",21);
-
-
-    a1.item_id = 7;
-    a1.item_name = "Oreos" ;
-    a1.selling_price = 10 ;
-    // a1.
-
-
-
-    // ItemUpdateResults oupt1 =  d1.updateStock(a1,17);
-    // if (oupt1==ItemUpdateResults::kExists)
-    // {        cout<<"Exists";    }
-    
-    // else if (oupt1==ItemUpdateResults::kDoesNotExist)
-    // {        cout<<"Data ID Does not exist";    }
-    // else if (oupt1==ItemUpdateResults::kExistsWithDiffName)
-    // { cout<<"Item Does exist,With different Name ";}
-    // else if (oupt1==ItemUpdateResults::kStockNegative)
-    // { cout<<"Item Does exist,Demand more stocks but not present in table ";}
-    
-
-
-
-    // d1.updateStock(a1,-7);
-
-
-
-
-
-    // a1.item_id = 26;
-    // a1.item_name = "Lays-Tomato" ;
-    // a1.selling_price = 10 ;
-
-    // a1.buying_price =7 ;
-    // a1.holding_price = 10;
-    // d1.addNewItem(a1,17);
-
-
-
-
-
-
-
-
-
-//     AttendanceRecord an1 = d1.getEmployeeAttendance("Sandeep Reddy","2022-03-09");
-
-// // typedef std::list<std::pair<std::string, std::string>> AttendanceRecord;
-//     for (auto x :  an1)
-//         cout<<"\n"<<x.first<<" "<<x.second;
-    
-    // Predict_data_type in1 ;
-    // in1.item_id = 11 ;
-    // in1.Forecast = .2 ;
-    // in1.MADt = 0.2 ;
-    // in1.Smoothed_error = 0.2;
-    // in1.T = 0.2;
-    // d1.Insert_predict_data(in1);
-
-
-    return 0;
-}
-
 
 
 // g++ database.cpp -l sqlite3 -o run1

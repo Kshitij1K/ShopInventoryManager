@@ -28,6 +28,7 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
     break;
   
   case ShopState::Event::kStockInfoCalled:
+    shop->setState(StockInfo::getInstance());
     break;
 
   case ShopState::Event::kExitCalled:

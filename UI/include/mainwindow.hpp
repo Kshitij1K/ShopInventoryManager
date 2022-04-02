@@ -32,7 +32,7 @@ public:
     void addNewItem();
     void updateItemStock();
 
-    void prepareStockInfoTable();
+    void prepareStockInfoTable(ItemStocks items);
 
 private:
     Ui::MainWindow *ui;
