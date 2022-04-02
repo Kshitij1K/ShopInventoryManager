@@ -34,6 +34,7 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
         smoothed_error.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Smoothed_error);
         MADt.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().MADt);
         T.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().T);
+        demand.push_back(shop->database.getItemsSold(currentPair.first.item_id));
     }
 
     update_forecast();
@@ -50,12 +51,12 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
       i++;
     }
       break;
+    }
 
 
   case ShopState::Event::kChangeCredentialsPageCalled:
     shop->setState(ChangeLoginInfo::getInstance());
     break;
-    }
 
   case ShopState::Event::kItemUpdateCalled:
     shop->setState(ItemUpdate::getInstance());
