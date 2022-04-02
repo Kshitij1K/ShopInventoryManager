@@ -1,5 +1,5 @@
 #include <all_shop_states.hpp>
-
+#include "ortools/linear_solver/linear_solver.h"
 ShopState& RestockingSuggestion::getInstance() {
   static RestockingSuggestion singleton;
   return singleton;
