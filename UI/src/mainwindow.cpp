@@ -82,38 +82,38 @@ void MainWindow::stockInfoRequested() {
 }
 
 void MainWindow::addNewItem() {
-    shop_->item_for_update.item_id = ui->Item_ID_Line_Edit->text().toLongLong();
-    shop_->item_for_update.item_name = ui->Item_Name_line_edit->text().toStdString();
-    shop_->item_for_update.buying_price = ui->Buying_Price_line_edit->text().toFloat();
-    shop_->item_for_update.selling_price = ui->Selling_Price_line_edit->text().toFloat();
-    shop_->item_for_update.holding_price = ui->Holding_Price_line_edit->text().toFloat();
-    shop_->item_stock_update = ui->Stock_Change_Line_Edit->text().toLongLong();
+    shop_->item_for_update.item_id = ui->itemIDLineEdit->text().toLongLong();
+    shop_->item_for_update.item_name = ui->itemNameLineEdit->text().toStdString();
+    shop_->item_for_update.buying_price = ui->buyingPriceLineEdit->text().toFloat();
+    shop_->item_for_update.selling_price = ui->sellingPriceLineEdit->text().toFloat();
+    shop_->item_for_update.holding_price = ui->holdingPriceLineEdit->text().toFloat();
+    shop_->item_stock_update = ui->stockChangesLineEdit->text().toLongLong();
     shop_->callEvent(ShopState::Event::kNewItemAdded);
 
-    ui->Item_ID_Line_Edit->clear();
-    ui->Item_Name_line_edit->clear();
-    ui->Buying_Price_line_edit->clear();
-    ui->Selling_Price_line_edit->clear();
-    ui->Holding_Price_line_edit->clear();
-    ui->Stock_Change_Line_Edit->clear();
+    ui->itemIDLineEdit->clear();
+    ui->itemNameLineEdit->clear();
+    ui->buyingPriceLineEdit->clear();
+    ui->sellingPriceLineEdit->clear();
+    ui->holdingPriceLineEdit->clear();
+    ui->stockChangesLineEdit->clear();
 
 }
 
 void MainWindow::updateItemStock() {
-    shop_->item_for_update.item_id = ui->Item_ID_Line_Edit->text().toLongLong();
-    shop_->item_for_update.item_name = ui->Item_Name_line_edit->text().toStdString();
-    shop_->item_for_update.buying_price = ui->Buying_Price_line_edit->text().toFloat();
-    shop_->item_for_update.selling_price = ui->Selling_Price_line_edit->text().toFloat();
-    shop_->item_for_update.holding_price = ui->Holding_Price_line_edit->text().toFloat();
-    shop_->item_stock_update = ui->Stock_Change_Line_Edit->text().toLongLong();
+    shop_->item_for_update.item_id = ui->itemIDLineEdit->text().toLongLong();
+    shop_->item_for_update.item_name = ui->itemNameLineEdit->text().toStdString();
+    shop_->item_for_update.buying_price = ui->buyingPriceLineEdit->text().toFloat();
+    shop_->item_for_update.selling_price = ui->sellingPriceLineEdit->text().toFloat();
+    shop_->item_for_update.holding_price = ui->holdingPriceLineEdit->text().toFloat();
+    shop_->item_stock_update = ui->stockChangesLineEdit->text().toLongLong();
     shop_->callEvent(ShopState::Event::kItemStockUpdated);
 
-    ui->Item_ID_Line_Edit->clear();
-    ui->Item_Name_line_edit->clear();
-    ui->Buying_Price_line_edit->clear();
-    ui->Selling_Price_line_edit->clear();
-    ui->Holding_Price_line_edit->clear();
-    ui->Stock_Change_Line_Edit->clear();
+    ui->itemIDLineEdit->clear();
+    ui->itemNameLineEdit->clear();
+    ui->buyingPriceLineEdit->clear();
+    ui->sellingPriceLineEdit->clear();
+    ui->holdingPriceLineEdit->clear();
+    ui->stockChangesLineEdit->clear();
 }
 
 void MainWindow::recommendationPageRequested() {
