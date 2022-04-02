@@ -69,7 +69,7 @@ class Database
 
   ItemStocks getAllItemStocks();  
 
-
+  Item getItemInfo(long long int item_id);
 
   void Insert_predict_data(Predict_data_type input_1);
   Predict_record retrieve_predict_data_basis_of_name(std::string name); //search on basis of item name

@@ -13,12 +13,15 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->login_button, &QPushButton::clicked, this, &MainWindow::loginButtonPressed);
     QObject::connect(ui->reset_button, &QPushButton::clicked, this, &MainWindow::resetButtonPressed);
     QObject::connect(ui->admin_logout_button, &QPushButton::clicked, this, &MainWindow::logoutButtonPressed);
+    QObject::connect(ui->employee_logout_button, &QPushButton::clicked, this, &MainWindow::logoutButtonPressed);
 
     QObject::connect(ui->stock_info_button, &QPushButton::clicked, this, &MainWindow::stockInfoRequested);
     // QObject::connect(ui->employee_list_button, &QPushButton::clicked, this, &MainWindow::employeeListRequested);
     QObject::connect(ui->Update_Item_Information, &QPushButton::clicked, this, &MainWindow::updateItemsRequested);
     QObject::connect(ui->Update_Button, &QPushButton::clicked, this, &MainWindow::updateItemStock);
     QObject::connect(ui->recommendation_system_button, &QPushButton::clicked, this, &MainWindow::recommendationPageRequested);
+    QObject::connect(ui->item_info_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+
     
     QObject::connect(ui->restocking_suggestion_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     // QObject::connect(ui->employee_list_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
@@ -26,6 +29,11 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
 
     QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
     QObject::connect(ui->Add_Button, &QPushButton::clicked, this, &MainWindow::addNewItem);
+
+    QObject::connect(ui->Add_Button_Invoice, &QPushButton::clicked, this, &MainWindow::addButtonInvoicePressed);
+    QObject::connect(ui->Delete_Button_Invoice, &QPushButton::clicked, this, &MainWindow::deleteButtonInvoicePressed);
+    QObject::connect(ui->Generate_Button, &QPushButton::clicked, this, &MainWindow::generateInvoiceCalled);
+    QObject::connect(ui->Cancel_Button, &QPushButton::clicked, this, &MainWindow::cancelInvoiceCalled);
 
     // ui->stock_info_table->setModel(&stock_info_model);
 
@@ -51,7 +59,7 @@ void MainWindow::loginButtonPressed() {
         if(shop_->is_admin_login) {
             ui->stackedWidget->setCurrentIndex(1);
         } else {
-            // ui->stackedWidget->setCurrentIndex(2);
+            ui->stackedWidget->setCurrentIndex(5);
         }
     }
 }
@@ -161,4 +169,91 @@ void MainWindow::prepareStockInfoTable(ItemStocks items) {
 
 }
 
+void MainWindow::addButtonInvoicePressed() {
+    long long int item_id = stoll(ui->Item_id_Line_Edit->text().toStdString());
+    long long int quantity = stoll(ui->Quantity_Line_Edit->text().toStdString());
+
+    Item item = shop_->database.getItemInfo(item_id);
+
+
+    ItemStocks::iterator cart_item_;
+    for (cart_item_ = shop_->consumer_cart.begin(); cart_item_ != shop_->consumer_cart.end(); cart_item_++) {
+        if (cart_item_->first.item_id == item_id) {
+            cart_item_->second += quantity;
+            refreshInvoiceTable();
+            break;
+        }
+    }
+
+    if (cart_item_ == shop_->consumer_cart.end()) {
+        shop_->consumer_cart.push_back({item, quantity});
+        refreshInvoiceTable();
+    }
+
+    ui->Item_id_Line_Edit->clear();
+    ui->Quantity_Line_Edit->clear();
+}
+
+void MainWindow::deleteButtonInvoicePressed(){
+    long long int item_id = stoll(ui->Item_id_Line_Edit->text().toStdString());
+    long long int quantity = stoll(ui->Quantity_Line_Edit->text().toStdString());
+
+    Item item = shop_->database.getItemInfo(item_id);
+
+
+    ItemStocks::iterator cart_item_;
+    for (cart_item_ = shop_->consumer_cart.begin(); cart_item_ != shop_->consumer_cart.end(); cart_item_++) {
+        if (cart_item_->first.item_id == item_id) {
+            cart_item_->second -= quantity;
+
+            if (cart_item_->second <= 0) shop_->consumer_cart.erase(cart_item_);
+            
+            refreshInvoiceTable();
+            break;
+        }
+    }
+
+    ui->Item_id_Line_Edit->clear();
+    ui->Quantity_Line_Edit->clear();
+}
+
+void MainWindow::refreshInvoiceTable() {
+    total_amount_ = 0;
+    ui->invoice_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->invoice_table->setRowCount(shop_->consumer_cart.size());
+
+    int count = 0;
+    for (auto item_:shop_->consumer_cart) {
+        double amount = item_.first.selling_price*item_.second;
+        total_amount_ += amount;
+        
+        auto item_name_disp = new QTableWidgetItem(QString(item_.first.item_name.c_str()));
+        auto item_id_disp = new QTableWidgetItem(QString(std::to_string(item_.first.item_id).c_str()));
+        auto quantity_disp = new QTableWidgetItem(QString(std::to_string(item_.second).c_str()));
+        auto amount_disp = new QTableWidgetItem(QString(std::to_string(amount).c_str()));
+        auto selling_price_disp = new QTableWidgetItem(QString(std::to_string(item_.first.selling_price).c_str()));
+
+        ui->invoice_table->setItem(count, 0, item_id_disp);
+        ui->invoice_table->setItem(count, 1, item_name_disp);
+        ui->invoice_table->setItem(count, 2, selling_price_disp);
+        ui->invoice_table->setItem(count, 3, quantity_disp);
+        ui->invoice_table->setItem(count, 4, amount_disp);
+
+        count++;
+    }
+
+    ui->label_4->setText(QString(std::to_string(total_amount_).c_str()));
+}
+
+void MainWindow::generateInvoiceCalled() {
+    shop_->callEvent(ShopState::Event::kItemsBought);
+    refreshInvoiceTable();
+}
+
+void MainWindow::cancelInvoiceCalled() {
+    shop_->consumer_cart.clear();
+    refreshInvoiceTable();
+    ui->Item_id_Line_Edit->clear();
+    ui->Quantity_Line_Edit->clear();
+}
 #include "moc_mainwindow.cpp"

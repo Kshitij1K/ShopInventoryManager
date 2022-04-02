@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>971</width>
-    <height>583</height>
+    <width>1042</width>
+    <height>808</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -211,10 +211,10 @@
             <x>120</x>
             <y>-5</y>
             <width>711</width>
-            <height>491</height>
+            <height>611</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="verticalLayout" stretch="1,5,2,1">
+          <layout class="QVBoxLayout" name="verticalLayout" stretch="1,0,2,1">
            <property name="topMargin">
             <number>10</number>
            </property>
@@ -349,6 +349,117 @@ hr { height: 1px; border-width: 0; }
                </item>
                <item>
                 <spacer name="horizontalSpacer_15">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_2">
+               <item>
+                <spacer name="horizontalSpacer_46">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="edit_employee_button">
+                 <property name="text">
+                  <string>Add/Change Employee Info</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_47">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_3">
+               <item>
+                <spacer name="horizontalSpacer_48">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="change_admin_password_button">
+                 <property name="text">
+                  <string>Change Admin password</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_49">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_5">
+               <item>
+                <spacer name="horizontalSpacer_50">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>40</width>
+                   <height>20</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QPushButton" name="view_attendance_info">
+                 <property name="text">
+                  <string>See Employee Attendance</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="horizontalSpacer_51">
                  <property name="orientation">
                   <enum>Qt::Horizontal</enum>
                  </property>
@@ -557,7 +668,7 @@ hr { height: 1px; border-width: 0; }
             <height>471</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="Item_Information_Update_Page" stretch="1,2,1">
+          <layout class="QVBoxLayout" name="Item_Information_Update_Page" stretch="1,2,1,0">
            <property name="topMargin">
             <number>10</number>
            </property>
@@ -1029,6 +1140,13 @@ hr { height: 1px; border-width: 0; }
              </item>
             </layout>
            </item>
+           <item>
+            <widget class="QPushButton" name="item_info_back_button">
+             <property name="text">
+              <string>Back</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </widget>
@@ -1200,7 +1318,7 @@ hr { height: 1px; border-width: 0; }
             <height>431</height>
            </rect>
           </property>
-          <layout class="QVBoxLayout" name="Invoice_Generator_Page" stretch="1,1,0,1,1,1,2">
+          <layout class="QVBoxLayout" name="Invoice_Generator_Page" stretch="1,1,0,1,1,1,2,0">
            <property name="topMargin">
             <number>10</number>
            </property>
@@ -1241,7 +1359,7 @@ hr { height: 1px; border-width: 0; }
              </column>
              <column>
               <property name="text">
-               <string>New Column</string>
+               <string>Item Name</string>
               </property>
              </column>
              <column>
@@ -1296,7 +1414,7 @@ hr { height: 1px; border-width: 0; }
               </spacer>
              </item>
              <item row="1" column="0">
-              <widget class="QLineEdit" name="ITem_ID_Line_Edit"/>
+              <widget class="QLineEdit" name="Item_id_Line_Edit"/>
              </item>
              <item row="0" column="1">
               <spacer name="horizontalSpacer_39">
@@ -1453,6 +1571,13 @@ hr { height: 1px; border-width: 0; }
               </spacer>
              </item>
             </layout>
+           </item>
+           <item>
+            <widget class="QPushButton" name="employee_logout_button">
+             <property name="text">
+              <string>Log Out</string>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>

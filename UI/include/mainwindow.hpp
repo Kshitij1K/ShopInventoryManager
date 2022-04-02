@@ -27,6 +27,10 @@ public:
     void updateItemsRequested();
     void recommendationPageRequested();
     void adminBackButtonPressed();
+    void addButtonInvoicePressed();
+    void deleteButtonInvoicePressed();
+    void generateInvoiceCalled();
+    void cancelInvoiceCalled();
     
     void suggestionAsked();
     void addNewItem();
@@ -39,6 +43,10 @@ private:
     Shop* shop_;
 
     StockInfoModel stock_info_model;
+
+    void refreshInvoiceTable();
+    ItemStocks consumer_cart_;
+    double total_amount_;
 };
 
 #endif // MAINWINDOW_H

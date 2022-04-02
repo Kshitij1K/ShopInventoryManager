@@ -39,25 +39,16 @@ struct Data_Item_List
 	int sisze ;
     vector<string>data ;
 };
-
-
-
-
-
-
-static int callback(void* data, int argc, char** argv, char** azColName)
+ 
+static int callback_iteminfo(void* data, int argc, char** argv, char** azColName)
 {
-    int i;
-    fprintf(stderr, "%s: ", (const char*)data);
-    for (i = 0; i < argc; i++) {
-        printf("%s = %s  ", azColName[i], argv[i] ? argv[i] : "NULL");
-    }
-    printf("\n");
+    Item* item = (Item*)data;
+    item->item_name= argv[0];
+    item->selling_price = stod(argv[1]);
+
     return 0;
 }
  
-
-
 
 //function returns rows of data where each column is data mapped to column value
 static int callback1(void *data, int argc, char** argv, char** azColName)
@@ -1361,7 +1352,44 @@ ItemStocks Database:: getAllItemStocks()
 }
 
 
+Item Database::getItemInfo(long long int item_id) {
+    Item* item = new Item;
+    item->item_id = item_id;
 
+    sqlite3* DB;
+	int exit = 0;
+	DB = this->establish_connection(exit);
+    string query = "";
+    query = "SELECT name,price FROM Item_Info WHERE (ID = '"+std::to_string(item_id)+"');";
+	struct Data_v *get_ans = new Data_v() ;
+    get_ans->sisze = 0;
+    // sqlite3_exec(DB, query.c_str(), callback, NULL, NULL);
+    char* messaggeError =NULL;
+
+    cout<<endl<<"SQL Query :"<<query<<endl;
+    exit = sqlite3_exec(DB, query.c_str(), callback_iteminfo, item, &messaggeError);
+
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+        
+    // cout<<endl ;    
+	// for (auto i1: get_ans->data )
+	// {	
+    //     pair<std::string, std::string> temp1 = make_pair(i1["Login_T"],i1["Logout_T"]);
+    //     ans1.push_back(temp1);
+	// }
+    cout<<"\nOutput Message "<<string_message<<endl;
+    sqlite3_close(DB);
+    return *item;
+}
 
 
 

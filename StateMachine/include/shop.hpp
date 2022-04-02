@@ -24,6 +24,7 @@ class Shop {
   long long int item_stock_update;
 
   ItemStocks stocks;
+  ItemStocks consumer_cart;
 
   Database database;
 
