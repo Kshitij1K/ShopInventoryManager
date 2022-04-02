@@ -59,14 +59,19 @@ class Database
   AttendanceRecord getEmployeeAttendance(std::string employee_name,
                                          std::string date);
 
+  void addEmployee(std::string name, std::string username, std::string password, bool is_admin);
+  void removeEmployee(std::string name);
+  void changeEmployeeCredentials(std::string name, std::string new_username, std::string new_password);
+  
+
   // ItemUpdateResults addNewItem(Item new_item);
   ItemUpdateResults addNewItem(Item new_item,long long int stock=0);
 
 
   ItemUpdateResults updateStock(Item item, long long int diff);
 
-  void updateItemsSold(Item item, std::string date, long long int quantity);
-  long long int getItemsSold(Item item, std::string date);
+  void updateItemsSold(Item item, long long int quantity);
+  long long int getItemsSold(long long int id);
 
   ItemStocks getAllItemStocks();  
 

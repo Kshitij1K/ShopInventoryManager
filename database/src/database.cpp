@@ -39,6 +39,14 @@ struct Data_Item_List
 	int sisze ;
     vector<string>data ;
 };
+
+static int callback_simple_string(void* data, int argc, char** argv, char** azColName)
+{
+    std::string* str = (std::string*)data;
+    *str = std::string(*argv);
+
+    return 0;
+}
  
 static int callback_iteminfo(void* data, int argc, char** argv, char** azColName)
 {
@@ -780,30 +788,6 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
 	
     DB = this->establish_connection(exit);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     string query = "";
     string insert_1 = "INSERT INTO Item_Info VALUES(";
     string insert_id = to_string(new_item.item_id);
@@ -883,31 +867,99 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
 
 }
 
+void Database::addEmployee(std::string name, std::string username, std::string password, bool is_admin) 
+{
+    //connection establised
+    sqlite3* DB;
+	int exit = 0;
+	
+    DB = this->establish_connection(exit);
+
+    string query = "";
+    string insert_1 = "INSERT INTO Passwords VALUES(";
+
+    char* messaggeError =NULL;
+
+    string sql = insert_1+"'"+username+ "','"+password+"','"+name+"',"+std::to_string(int(is_admin)) +");";
+
+
+    cout<<endl<<"SQL Query :"<<sql<<endl;
+	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messaggeError);
+	// exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+        
+
+
+    if (exit != SQLITE_OK)
+        cout << "Error in Insertion" << endl;
+    else {
+        cout << "Operation OK!" << endl;
+    }
+
+
+    cout<<endl<<"Exn Output Message "<<string_message <<endl;
+
+}
+
+void Database::removeEmployee(std::string name) 
+{
+    //connection establised
+    sqlite3* DB;
+	int exit = 0;
+	
+    DB = this->establish_connection(exit);
+
+    string query = "";
+    string insert_1 = "DELETE FROM Passwords WHERE Name='";
+
+    char* messaggeError =NULL;
+
+    string sql = insert_1+name+"';";
+
+    cout<<endl<<"SQL Query :"<<sql<<endl;
+	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messaggeError);
+	// exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+        
+    if (exit != SQLITE_OK)
+        cout << "Error in Deletion" << endl;
+    else {
+        cout << "Operation OK!" << endl;
+    }
+
+
+    cout<<endl<<"Exn Output Message "<<string_message <<endl;
+
+}
+
 ItemUpdateResults Database::updateStock(Item new_item, long long int diff) 
 {
     //connection establised
      sqlite3* DB;
 	int exit = 0;
 	DB = this->establish_connection(exit);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     long long int sto_1 ;
     string current_id = to_string(new_item.item_id);
@@ -1037,7 +1089,50 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
 
 }
 
-void Database::updateItemsSold(Item item, std::string date, long long int quantity) 
+void Database::changeEmployeeCredentials(std::string name, std::string new_username, std::string new_password) 
+{
+    //connection establised
+    sqlite3* DB;
+	int exit = 0;
+	DB = this->establish_connection(exit);
+
+    char* messaggeError =NULL;
+    std::string string_message;
+
+            //update value 
+            // UPDATE Employee_Info SET Emp_Name = "Sandeep Reddy" WHERE Emp_Id = 2;
+    std::string query = "UPDATE Passwords SET Username = '"+ new_username +"', Password = '" + new_password + "' WHERE Name = '"+ name +"';";
+            // "UPDATE Employee_Info SET Emp_Name = "Sandeep Reddy" WHERE Emp_Id = 2;
+
+    cout <<"\nSql Query "<<query<<endl;
+
+    exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &messaggeError);
+
+
+                if (exit != SQLITE_OK)
+                cout << "Update Query Failed" << endl;
+                else {
+                    cout << "Operation OK!" << endl;
+                }
+
+                    if (messaggeError==NULL)
+                    {
+                        string_message=="";
+                        // cout<<"DEBUG1;";
+                    }
+                    else
+                    {
+                        string_message = messaggeError;
+                    }
+        
+            cout<<" \n Updated Employee creds Value "<<endl;
+            cout<<" \n Output Message"<< string_message<<endl;
+
+        	sqlite3_close(DB);
+
+}
+
+void Database::updateItemsSold(Item item, long long int quantity) 
 {
 
     //connection establised
@@ -1045,38 +1140,24 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
 	int exit = 0;
 	DB = this->establish_connection(exit);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     long long int sto_1 ;
     char* messaggeError =NULL;
+    
+    // string check = ;
+    
     string insert_1 = "INSERT INTO Sold_by_date VALUES(";
     // string item_id_1 = to_string(Item_id);
-    string item_id_1 = to_string(item.item_id);
-    string quan_tity = to_string(quantity);
 
     // INSERT INTO Sold_by_date VALUES(2,24,"2022-03-07");
 
+    std::string query = "SELECT Quantity FROM Sold_Items WHERE (Item_ID = '"+std::to_string(item.item_id)+"');";
 
-    string query  = insert_1+item_id_1+","+quan_tity+","+"\""+date+"\");" ;
+    // string query  = "SELECT EXISTS(SELECT * from Sold_Items WHERE Item_ID=" + std::to_string(item.item_id) + ")  ;";
     cout<<"\n SQLQuery: "<<query<<endl ;
  
+    std::string ans;
 
-	exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &messaggeError);
+	exit = sqlite3_exec(DB, query.c_str(), callback_simple_string, &ans, &messaggeError);
     // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
 
     if (exit != SQLITE_OK)
@@ -1098,29 +1179,87 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
     }
 
     cout<<"\nOutput Message "<<string_message<<endl;
-    string temp1 = "UNIQUE constraint failed: Sold_by_date.Item_Id, Sold_by_date.Date_val";
-    if (temp1.compare(string_message)==0)
-    {
-        cout<<endl<<"Data of same ID and Date Already exists in Database";
-        sqlite3_close(DB);
-        return ;
+
+    if (ans == "") {
+        std::string new_query = "INSERT INTO Sold_Items VALUES(" + std::to_string(item.item_id)+", " + std::to_string(quantity)+");";
+        exit = sqlite3_exec(DB, new_query.c_str(), callback_simple_string, &ans, &messaggeError);
+    // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
+
+        if (exit != SQLITE_OK)
+            cout << "Insert Query Failed" << endl;
+        else {
+            cout << "Operation OK!" << endl;
+        }
+
+
+        std::string string_message;
+        if (messaggeError==NULL)
+        {
+            string_message=="";
+            // cout<<"DEBUG1;";
+        }
+        else
+        {
+            string_message = messaggeError;
+        }
+
+        cout<<"\nOutput Message "<<string_message<<endl;
+
+    } else {
+        std::string new_query = "UPDATE Sold_Items SET Quantity = "+ to_string(stoll(ans)+quantity) +" WHERE Item_ID = "+std::to_string(item.item_id)+";";
+        exit = sqlite3_exec(DB, new_query.c_str(), callback_simple_string, &ans, &messaggeError);
+    // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
+
+        if (exit != SQLITE_OK)
+            cout << "Update Query Failed" << endl;
+        else {
+            cout << "Operation OK!" << endl;
+        }
+
+
+        std::string string_message;
+        if (messaggeError==NULL)
+        {
+            string_message=="";
+            // cout<<"DEBUG1;";
+        }
+        else
+        {
+            string_message = messaggeError;
+        }
+
+        cout<<"\nOutput Message "<<string_message<<endl;
     }
+
+    sqlite3_close(DB);
+}
+
+long long int Database::getItemsSold(long long int id) 
+{
+    //connection establised
+sqlite3* DB;
+	int exit = 0;
+	DB = this->establish_connection(exit);
+
+    long long int sto_1 ;
+    char* messaggeError =NULL;
     
+    // string check = ;
+    
+    string insert_1 = "INSERT INTO Sold_by_date VALUES(";
+    // string item_id_1 = to_string(Item_id);
 
-    //Keeping only 30 old records of date
-    //select oldest date if data length is larger than 30 
+    // INSERT INTO Sold_by_date VALUES(2,24,"2022-03-07");
 
-     query  = "SELECT Date_val FROM Sold_by_date ";
-    // insert_1+item_id_1+","+quan_tity+","+"\""+date+"\");" ;
+    std::string query = "SELECT Quantity FROM Sold_Items WHERE (Item_ID = '"+std::to_string(id)+"');";
 
-    set<string> s1 ;
-    // set<string,compartor_1> s1 ;
+    // string query  = "SELECT EXISTS(SELECT * from Sold_Items WHERE Item_ID=" + std::to_string(item.item_id) + ")  ;";
+    cout<<"\n SQLQuery: "<<query<<endl ;
+ 
+    std::string ans;
 
-    struct Data_v *get_ans = new Data_v() ;
-    get_ans->sisze = 0;
-
-
-    exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
+	exit = sqlite3_exec(DB, query.c_str(), callback_simple_string, &ans, &messaggeError);
+    // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
 
     if (exit != SQLITE_OK)
         cout << "Search Query Failed" << endl;
@@ -1128,122 +1267,6 @@ void Database::updateItemsSold(Item item, std::string date, long long int quanti
         cout << "Operation OK!" << endl;
     }
 
-    if (messaggeError==NULL)
-    {
-        string_message=="";
-        // cout<<"DEBUG1;";
-    }
-    else
-    {
-        string_message = messaggeError;
-    }
-        
-
-
-    cout<<"\nOutput Message "<<string_message<<endl;
-
-    // sqlite3_exec(DB, query.c_str(), callback1, NULL, NULL);
-    string temp1_date="" ;
-
-	for (auto i1: get_ans->data )
-	{	
-        temp1_date = i1["Date_val"] ;
-        s1.insert(temp1_date);
-	}
-
-    
-    cout<<"Number of Dates in Database "<<s1.size();
-    cout<<endl<<"Oldest Date in Database "<<*s1.begin();
-
-    // if size increase more than 31 days 
-    if (s1.size()>30)
-    {
-        string oldest_Date = *s1.begin();
-        query = "DELETE FROM Sold_by_date WHERE Date_val = ";
-        query = query+"\""+oldest_Date+"\";";
-        //remove data from database 
-        cout<<"\nSql Query : "<<query<<endl;
-
-	    exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &messaggeError);
-
-
-            if (exit != SQLITE_OK)
-                cout << "Search Query Failed" << endl;
-            else {
-                cout << "Operation OK!" << endl;
-            }
-
-
-            if (messaggeError==NULL)
-            {
-                string_message=="";
-                // cout<<"DEBUG1;";
-            }
-            else
-            {
-                string_message = messaggeError;
-            }
-                
-            cout<<"\nOutput Message "<<string_message<<endl;
-
-    }
-    // cout<<" "<<s1.size();
-    // cout<<endl<<*s1.begin();
-    sqlite3_close(DB);
-}
-
-long long int Database::getItemsSold(Item item, std::string date) 
-{
-    //connection establised
-    sqlite3* DB;
-	int exit = 0;
-
-    DB = this->establish_connection(exit);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    long long int sto_1 ;
-    string query ;
-    long long int Item_id = item.item_id;
-    char* messaggeError =NULL;
-    struct Data_v *get_ans = new Data_v() ;
-    get_ans->sisze = 0;
-    query = "SELECT Sold_by_date.Sold_quan FROM Sold_by_date WHERE Sold_by_date.Item_Id = "+to_string(Item_id)+ " AND Sold_by_date.Date_val = \"" +date +"\";";
-
-    cout<<endl<<"Sql Query :"<<query<<endl;
-    // cout<<get_ans->sisze<<endl;
-    
-    exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
-    if (get_ans->sisze==0)
-    {
-        cout<<"\n No such Data is present in Database";
-        sqlite3_close(DB);
-        return -1;
-
-    }
-    string quantity_1 = "";
-    for (auto i1: get_ans->data )
-	{	
-        quantity_1 = i1["Sold_quan"] ;
-		cout<<endl<<quantity_1<<endl;
-	}
 
     std::string string_message;
     if (messaggeError==NULL)
@@ -1255,10 +1278,11 @@ long long int Database::getItemsSold(Item item, std::string date)
     {
         string_message = messaggeError;
     }
+
     cout<<"\nOutput Message "<<string_message<<endl;
-    sqlite3_close(DB);
-    long long int val = stoll(quantity_1);
-    return val ;
+
+    if (ans=="") return 0;
+    return stoll(ans);
 }
 
 

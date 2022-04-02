@@ -49,7 +49,11 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
 
       i++;
     }
+      break;
 
+
+  case ShopState::Event::kChangeCredentialsPageCalled:
+    shop->setState(ChangeLoginInfo::getInstance());
     break;
     }
 

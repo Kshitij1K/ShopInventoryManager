@@ -378,7 +378,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="edit_employee_button">
+             <widget class="QPushButton" name="editEmployeeButton">
               <property name="text">
                <string>Add/Change Login Info</string>
               </property>
@@ -983,7 +983,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="2,3,2,3,2,3,2">
+           <layout class="QHBoxLayout" name="horizontalLayout_12" stretch="2,3,2,3,2,3,2,0,0">
             <item>
              <spacer name="horizontalSpacer_25">
               <property name="orientation">
@@ -998,7 +998,7 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton">
+             <widget class="QPushButton" name="addNewEmployeeAsAdminButton">
               <property name="text">
                <string>Add New Employee as Admin</string>
               </property>
@@ -1046,6 +1046,26 @@
             </item>
             <item>
              <spacer name="horizontalSpacer_21">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="deleteEmployeeButton">
+              <property name="text">
+               <string>Delete Employee</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_27">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>

@@ -7,3 +7,4 @@
 #include <states/stock_info.hpp>
 #include <states/item_update.hpp>
 #include <states/restocking_suggestion.hpp>
+#include <states/change_login_info.hpp>
