@@ -69,8 +69,8 @@ class Database
 
   ItemUpdateResults updateStock(Item item, long long int diff);
 
-  void updateItemsSold(Item item, std::string date, long long int quantity);
-  long long int getItemsSold(Item item, std::string date);
+  void updateItemsSold(Item item, long long int quantity);
+  long long int getItemsSold(long long int id);
 
   ItemStocks getAllItemStocks();  
 
