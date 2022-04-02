@@ -21,11 +21,19 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->Update_Button, &QPushButton::clicked, this, &MainWindow::updateItemStock);
     QObject::connect(ui->recommendation_system_button, &QPushButton::clicked, this, &MainWindow::recommendationPageRequested);
     QObject::connect(ui->item_info_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+    QObject::connect(ui->editEmployeeButton, &QPushButton::clicked, this, &MainWindow::changeCredentialsPageRequested);
 
+    QObject::connect(ui->addNewEmployeeButton, &QPushButton::clicked, this, &MainWindow::addEmployeeRequest);
+    QObject::connect(ui->addNewEmployeeAsAdminButton, &QPushButton::clicked, this, &MainWindow::addEmployeeAsAdminRequest);
+    QObject::connect(ui->changeEmployeeCredsButton, &QPushButton::clicked, this, &MainWindow::changeCredentialsRequest);
+    QObject::connect(ui->deleteEmployeeButton, &QPushButton::clicked, this, &MainWindow::deleteEmployeeRequest);
+    
     
     QObject::connect(ui->restocking_suggestion_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     // QObject::connect(ui->employee_list_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     QObject::connect(ui->Back_Button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+    QObject::connect(ui->addChangeEmployeeBackButton, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+    
 
     QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
     QObject::connect(ui->Add_Button, &QPushButton::clicked, this, &MainWindow::addNewItem);
@@ -59,7 +67,7 @@ void MainWindow::loginButtonPressed() {
         if(shop_->is_admin_login) {
             ui->stackedWidget->setCurrentIndex(1);
         } else {
-            ui->stackedWidget->setCurrentIndex(5);
+            ui->stackedWidget->setCurrentIndex(7);
         }
     }
 }
@@ -256,4 +264,59 @@ void MainWindow::cancelInvoiceCalled() {
     ui->Item_id_Line_Edit->clear();
     ui->Quantity_Line_Edit->clear();
 }
+
+void MainWindow::changeCredentialsPageRequested() {
+    shop_->callEvent(ShopState::Event::kChangeCredentialsPageCalled);
+    ui->stackedWidget->setCurrentIndex(5);
+}
+
+void MainWindow::addEmployeeRequest(){
+    shop_->employee_name = ui->employeeNameLineEdit->text().toStdString();
+    shop_->employee_username = ui->employeeUsernameLineEdit->text().toStdString();
+    shop_->employee_password = ui->employeePasswordLineEdit->text().toStdString();
+    
+    shop_->callEvent(ShopState::Event::kAddEmployeeCredentialsCalled);
+    
+    ui->employeeNameLineEdit->clear();
+    ui->employeeUsernameLineEdit->clear();
+    ui->employeePasswordLineEdit->clear();
+}
+
+void MainWindow::addEmployeeAsAdminRequest(){
+    shop_->employee_name = ui->employeeNameLineEdit->text().toStdString();
+    shop_->employee_username = ui->employeeUsernameLineEdit->text().toStdString();
+    shop_->employee_password = ui->employeePasswordLineEdit->text().toStdString();
+    
+    shop_->callEvent(ShopState::Event::kAddAdminCredentialsCalled);
+    
+    ui->employeeNameLineEdit->clear();
+    ui->employeeUsernameLineEdit->clear();
+    ui->employeePasswordLineEdit->clear();
+}
+
+void MainWindow::changeCredentialsRequest(){
+    shop_->employee_name = ui->employeeNameLineEdit->text().toStdString();
+    shop_->employee_username = ui->employeeUsernameLineEdit->text().toStdString();
+    shop_->employee_password = ui->employeePasswordLineEdit->text().toStdString();
+    
+    shop_->callEvent(ShopState::Event::kCredentialsChanged);
+    
+    ui->employeeNameLineEdit->clear();
+    ui->employeeUsernameLineEdit->clear();
+    ui->employeePasswordLineEdit->clear();
+}
+
+void MainWindow::deleteEmployeeRequest(){
+    std::string employee_name = ui->employeeNameLineEdit->text().toStdString();
+    if (employee_name == "Admin") return;
+
+    shop_->employee_name = employee_name;
+
+    shop_->callEvent(ShopState::Event::kEmployeeDeleted);
+    ui->employeeNameLineEdit->clear();
+    ui->employeeUsernameLineEdit->clear();
+    ui->employeePasswordLineEdit->clear();
+
+}
+
 #include "moc_mainwindow.cpp"

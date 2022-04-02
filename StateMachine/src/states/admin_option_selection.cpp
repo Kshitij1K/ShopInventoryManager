@@ -21,6 +21,8 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
 
   case ShopState::Event::kForecastUpdateCalled:
     //shop->database.Insert_predict_data();
+  case ShopState::Event::kChangeCredentialsPageCalled:
+    shop->setState(ChangeLoginInfo::getInstance());
     break;
 
   case ShopState::Event::kItemUpdateCalled:

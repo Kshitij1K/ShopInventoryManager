@@ -26,12 +26,19 @@ public:
     void employeeListRequested();
     void updateItemsRequested();
     void recommendationPageRequested();
+    void changeCredentialsPageRequested();
+    void addNewEmployeeRequested();
+    void addNewAdminRequested();
     void adminBackButtonPressed();
     void addButtonInvoicePressed();
     void deleteButtonInvoicePressed();
     void generateInvoiceCalled();
     void cancelInvoiceCalled();
     
+    void addEmployeeRequest();
+    void addEmployeeAsAdminRequest();
+    void deleteEmployeeRequest();
+    void changeCredentialsRequest();
     void suggestionAsked();
     void addNewItem();
     void updateItemStock();

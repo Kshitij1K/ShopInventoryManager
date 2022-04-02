@@ -26,6 +26,10 @@ class Shop {
   ItemStocks stocks;
   ItemStocks consumer_cart;
 
+  std::string employee_name;
+  std::string employee_username;
+  std::string employee_password;
+
   Database database;
 
   void callEvent(ShopState::Event event);

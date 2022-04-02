@@ -780,30 +780,6 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
 	
     DB = this->establish_connection(exit);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     string query = "";
     string insert_1 = "INSERT INTO Item_Info VALUES(";
     string insert_id = to_string(new_item.item_id);
@@ -883,31 +859,99 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
 
 }
 
+void Database::addEmployee(std::string name, std::string username, std::string password, bool is_admin) 
+{
+    //connection establised
+    sqlite3* DB;
+	int exit = 0;
+	
+    DB = this->establish_connection(exit);
+
+    string query = "";
+    string insert_1 = "INSERT INTO Passwords VALUES(";
+
+    char* messaggeError =NULL;
+
+    string sql = insert_1+"'"+username+ "','"+password+"','"+name+"',"+std::to_string(int(is_admin)) +");";
+
+
+    cout<<endl<<"SQL Query :"<<sql<<endl;
+	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messaggeError);
+	// exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+        
+
+
+    if (exit != SQLITE_OK)
+        cout << "Error in Insertion" << endl;
+    else {
+        cout << "Operation OK!" << endl;
+    }
+
+
+    cout<<endl<<"Exn Output Message "<<string_message <<endl;
+
+}
+
+void Database::removeEmployee(std::string name) 
+{
+    //connection establised
+    sqlite3* DB;
+	int exit = 0;
+	
+    DB = this->establish_connection(exit);
+
+    string query = "";
+    string insert_1 = "DELETE FROM Passwords WHERE Name='";
+
+    char* messaggeError =NULL;
+
+    string sql = insert_1+name+"';";
+
+    cout<<endl<<"SQL Query :"<<sql<<endl;
+	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messaggeError);
+	// exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+        
+    if (exit != SQLITE_OK)
+        cout << "Error in Deletion" << endl;
+    else {
+        cout << "Operation OK!" << endl;
+    }
+
+
+    cout<<endl<<"Exn Output Message "<<string_message <<endl;
+
+}
+
 ItemUpdateResults Database::updateStock(Item new_item, long long int diff) 
 {
     //connection establised
      sqlite3* DB;
 	int exit = 0;
 	DB = this->establish_connection(exit);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     long long int sto_1 ;
     string current_id = to_string(new_item.item_id);
@@ -1034,6 +1078,49 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff)
 	sqlite3_close(DB);
     return return_val;
 
+
+}
+
+void Database::changeEmployeeCredentials(std::string name, std::string new_username, std::string new_password) 
+{
+    //connection establised
+    sqlite3* DB;
+	int exit = 0;
+	DB = this->establish_connection(exit);
+
+    char* messaggeError =NULL;
+    std::string string_message;
+
+            //update value 
+            // UPDATE Employee_Info SET Emp_Name = "Sandeep Reddy" WHERE Emp_Id = 2;
+    std::string query = "UPDATE Passwords SET Username = '"+ new_username +"', Password = '" + new_password + "' WHERE Name = '"+ name +"';";
+            // "UPDATE Employee_Info SET Emp_Name = "Sandeep Reddy" WHERE Emp_Id = 2;
+
+    cout <<"\nSql Query "<<query<<endl;
+
+    exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &messaggeError);
+
+
+                if (exit != SQLITE_OK)
+                cout << "Update Query Failed" << endl;
+                else {
+                    cout << "Operation OK!" << endl;
+                }
+
+                    if (messaggeError==NULL)
+                    {
+                        string_message=="";
+                        // cout<<"DEBUG1;";
+                    }
+                    else
+                    {
+                        string_message = messaggeError;
+                    }
+        
+            cout<<" \n Updated Employee creds Value "<<endl;
+            cout<<" \n Output Message"<< string_message<<endl;
+
+        	sqlite3_close(DB);
 
 }
 
