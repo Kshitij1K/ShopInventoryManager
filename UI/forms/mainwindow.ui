@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>825</width>
-    <height>640</height>
+    <width>952</width>
+    <height>633</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -197,7 +197,7 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_3">
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="14,10,10,10,10,2">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="14,10,10,10,10,10,2">
           <item>
            <widget class="QLabel" name="label_6">
             <property name="font">
@@ -326,7 +326,7 @@
            </layout>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2">
+           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="5,1,5">
             <item>
              <spacer name="horizontalSpacer_46">
               <property name="orientation">
@@ -349,6 +349,43 @@
             </item>
             <item>
              <spacer name="horizontalSpacer_47">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="5,1,5">
+            <item>
+             <spacer name="horizontalSpacer_30">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="forecast_button">
+              <property name="text">
+               <string>Forecast</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_49">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -801,7 +838,7 @@
            </widget>
           </item>
           <item>
-           <layout class="QHBoxLayout" name="Buttons_3" stretch="1,1,5,1,1">
+           <layout class="QHBoxLayout" name="Buttons_3" stretch="2,1,5,1,1">
             <property name="rightMargin">
              <number>10</number>
             </property>
@@ -863,7 +900,7 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_7">
-         <layout class="QVBoxLayout" name="verticalLayout_6">
+         <layout class="QVBoxLayout" name="verticalLayout_6" stretch="2,1,1,1,1,1">
           <item>
            <widget class="QLabel" name="label_11">
             <property name="font">

@@ -32,6 +32,7 @@ public:
     void adminBackButtonPressed();
     void addButtonInvoicePressed();
     void deleteButtonInvoicePressed();
+    void forecastButtonPressed();
     void generateInvoiceCalled();
     void cancelInvoiceCalled();
     

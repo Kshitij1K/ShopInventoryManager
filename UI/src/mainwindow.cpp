@@ -28,9 +28,8 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->changeEmployeeCredsButton, &QPushButton::clicked, this, &MainWindow::changeCredentialsRequest);
     QObject::connect(ui->deleteEmployeeButton, &QPushButton::clicked, this, &MainWindow::deleteEmployeeRequest);
     
-    
     QObject::connect(ui->restocking_suggestion_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
-    // QObject::connect(ui->employee_list_back_button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
+    QObject::connect(ui->forecast_button, &QPushButton::clicked, this, &MainWindow::forecastButtonPressed);
     QObject::connect(ui->Back_Button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     QObject::connect(ui->addChangeEmployeeBackButton, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     
@@ -321,6 +320,10 @@ void MainWindow::deleteEmployeeRequest(){
     ui->employeeUsernameLineEdit->clear();
     ui->employeePasswordLineEdit->clear();
 
+}
+
+void MainWindow::forecastButtonPressed() {
+    shop_->callEvent(ShopState::Event::kForecastUpdateCalled);
 }
 
 #include "moc_mainwindow.cpp"
