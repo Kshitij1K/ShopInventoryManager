@@ -355,82 +355,63 @@ void Database:: Insert_predict_data(Predict_data_type input_1)
 	DB = this->establish_connection(exit);
     string item_id;
 
-    string query = "";
-    string insert_1 = "INSERT INTO Predict_Table VALUES(";
-    string insert_id = to_string(input_1.item_id);
-    string insert_smoothed = to_string( input_1.Smoothed_error);
-    string insert_Forecast = to_string(input_1.Forecast);
-    string insert_madt = to_string(input_1.MADt);
-    string insert_T = to_string(input_1.T);
+    // query = "UPDATE Item_Info SET stock = "+to_string(sto_1) +" WHERE ID = "+temp1_id +";";
+
+    // string query = "";
+    // string insert_1 = "INSERT INTO Predict_Table VALUES(";
+    string id = to_string(input_1.item_id);
+    string smoothed = to_string( input_1.Smoothed_error);
+    string Forecast = to_string(input_1.Forecast);
+    string madt = to_string(input_1.MADt);
+    string T = to_string(input_1.T);
+
+    string query = "UPDATE Predict_Table SET Smoothed_Error = " + smoothed +
+                                          ", Forecast = " + Forecast +
+                                          ", MADt = " + madt +
+                                          ", T = " + T +
+                                           " WHERE Item_Id = " + id + ";";
+
+    // string query2 = "";
+    // string insert_2 = "DELETE FROM Predict_Table WHERE Item_ID=' ";
     
-    // string 
+    // string sql2 = insert_2 + insert_id + "';";
 
-    char* messaggeError =NULL;
+        
+    char* messaggeError1 = NULL;
 
-    string sql = insert_1+insert_id+ ","+insert_smoothed+","+insert_Forecast+","+insert_madt+","+insert_T +");";
+    cout<<endl<<"SQL Query :"<<query<<endl;
+	exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &messaggeError1);
 
-    cout<<endl<<"SQL Query :"<<sql<<endl;
-
-    // // struct Data_v *get_ans = new Data_v() ;
-    // // get_ans->sisze = 0;
-	exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &messaggeError);
-	// // exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
-
-
-    // string match = "UNIQUE constraint failed: Item_Info.ID";
-    string match ="UNIQUE constraint failed: Predict_Table.Item_Id, Predict_Table.Smoothed_Error, Predict_Table.Forecast, Predict_Table.MADt, Predict_Table.T";
-    std::string string_message;
-    if (messaggeError==NULL)
+    std::string string_message1;
+    if (messaggeError1==NULL)
     {
-        string_message=="";
+        string_message1=="";
         // cout<<"DEBUG1;";
     }
     else
     {
-        string_message = messaggeError;
+        string_message1 = messaggeError1;
     }
         
-
-
     if (exit != SQLITE_OK)
-        cout << "Error in Insertion" << endl;
+        cout << "Error in Updation" << endl;
     else {
         cout << "Operation OK!" << endl;
     }
+    
+    cout<<"\nOutput Message "<<string_message1<<endl;
 
-
-    cout<<endl<<"Exn Output Message "<<string_message <<endl;
-
-    if (string_message.compare(match)==0)
-    {
-        cout<<"\nData Duplication Problem, Insertion Failed \n";
-    }
-    else 
-        cout<<"\nInsertion Done";
-
+    // string 
 	sqlite3_close(DB);
     // return return_val;
-
-
-
-
-
 }
 
 Predict_record Database:: retrieve_predict_data_basis_of_name(std::string name) //search on basis of item name
 {
-         //connection establised
+    //connection establised
     sqlite3* DB;
 	int exit = 0;
 	DB = this->establish_connection(exit);
-
-
-
-
-
-
-
-
 
     string query = "";
     query = "SELECT ID FROM Item_Info WHERE name = '"+name + "';";
