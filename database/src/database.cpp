@@ -355,14 +355,6 @@ void Database:: Insert_predict_data(Predict_data_type input_1)
 	DB = this->establish_connection(exit);
     string item_id;
 
-    // INSERT INTO Predict_Table VALUES(1,0.1,0.2,0.4,0.2);
-
-
-
-
-
-
-
     string query = "";
     string insert_1 = "INSERT INTO Predict_Table VALUES(";
     string insert_id = to_string(input_1.item_id);
@@ -474,9 +466,7 @@ Predict_record Database:: retrieve_predict_data_basis_of_name(std::string name) 
     tuple_ids+=")";
     // cout<<tuple_ids<<endl;
 
-    free(get_ans);
-
-
+    delete get_ans;
 
     query = "SELECT * FROM Predict_Table WHERE Item_Id IN "+tuple_ids + ";";
 
@@ -518,7 +508,7 @@ Predict_record Database:: retrieve_predict_data_basis_of_name(std::string name) 
     cout<<endl ;    
     Predict_record return_val1 = get_ans1->data1 ;
     cout<<"\nOutput Message "<<string_message<<endl;
-    free(get_ans1);
+    delete get_ans1;
     sqlite3_close(DB);
     return return_val1;
 }
@@ -531,25 +521,6 @@ Predict_record Database:: retrieve_predict_data_basis_of_id(long long int id) //
     sqlite3* DB;
 	int exit = 0;
 	DB = this->establish_connection(exit);
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     string id_val = to_string(id);
     string query = "";
@@ -559,26 +530,6 @@ Predict_record Database:: retrieve_predict_data_basis_of_id(long long int id) //
     get_ans->sisze = 0;
     char* messaggeError =NULL;
 
-
-
-// struct Predict_data_type
-// {
-//     long long int item_id;
-//     double Smoothed_error;
-//     double Forecast;
-//     double MADt;
-//     double T;
-// };
-// typedef std::list<Predict_data_type> Predict_record;
-
-
-// struct Data_for_Predict
-// {
-// 	int sisze ;
-//     // list<std::pair<Item, long long int>> ItemStocks;
-//     Predict_record data1;
-
-// };
     cout<<endl<<"SQL Query :"<<query<<endl;
     exit = sqlite3_exec(DB, query.c_str(), callback3_getting_Predict_data, get_ans, &messaggeError);
     std::string string_message;
@@ -595,13 +546,10 @@ Predict_record Database:: retrieve_predict_data_basis_of_id(long long int id) //
     cout<<endl ;    
     Predict_record return_val1 = get_ans->data1 ;
     cout<<"\nOutput Message "<<string_message<<endl;
-    free(get_ans);
+    delete get_ans;
     sqlite3_close(DB);
     return return_val1;
 }
-
-
-
 
 
 // void Database::updateEmployeeLogin(std::string employee_name, std::string time) 
@@ -612,24 +560,6 @@ void Database::updateEmployeeLogin(std::string employee_name, std::string time,s
     sqlite3* DB;
 	int exit = 0;
 	DB = this->establish_connection(exit);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     string name = employee_name;
     string query = "";
@@ -843,12 +773,13 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
     }
 
 
-    cout<<endl<<"Exn Output Message "<<string_message <<endl;
+    cout<<endl<<"Exr4r4n Output Message "<<string_message <<endl;
 
     // // if id exist three cases : if kExists or kExistsWithDiffName 
     // if(strcmp(messaggeError,"UNIQUE constraint failed: Item_Info.ID")==0)
     if (string_message.compare(match)==0)
     {        
+        std::cout << "if is running\n";
         return_val = ItemUpdateResults::kExists; 
 
         query = "SELECT Item_Info.name,Item_Info.stock FROM Item_Info Where Item_Info.ID = "+insert_id +";";
@@ -871,6 +802,62 @@ ItemUpdateResults Database::addNewItem(Item new_item,long long int stock)
             //Different name
             return_val = ItemUpdateResults::kExistsWithDiffName; 
         }      
+    } else {
+        std::cout << "if is running\n";
+        
+        std::string insert_query1 = "INSERT INTO Sold_Items VALUES(" + insert_id + ", 0);";
+        char* messaggeError1 =NULL;
+
+        cout<<endl<<"SQL Query :"<<insert_query1<<endl;
+	    exit = sqlite3_exec(DB, insert_query1.c_str(), NULL, 0, &messaggeError1);
+	    // exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+        if (messaggeError1==NULL)
+        {
+            string_message=="";
+            // cout<<"DEBUG1;";
+        }
+        else
+        {
+            string_message = messaggeError1;
+        }
+            
+
+
+        if (exit != SQLITE_OK)
+            cout << "Error in Insertion" << endl;
+        else {
+            cout << "Operation OK!" << endl;
+        }
+
+        cout<<endl<<"Exn Output Message "<<string_message <<endl;
+
+        std::string insert_query2 = "INSERT INTO Predict_Table VALUES(" + insert_id + ", 0.0, 0.0, 0.0, 0.0);";
+        char* messaggeError2 =NULL;
+
+        cout<<endl<<"SQL Query :"<<insert_query2<<endl;
+	    exit = sqlite3_exec(DB, insert_query2.c_str(), NULL, 0, &messaggeError2);
+	    // exit = sqlite3_exec(DB, sql.c_str(), callback1, get_ans, &messaggeError);
+
+        if (messaggeError2==NULL)
+        {
+            string_message=="";
+            // cout<<"DEBUG1;";
+        }
+        else
+        {
+            string_message = messaggeError1;
+        }
+            
+
+
+        if (exit != SQLITE_OK)
+            cout << "Error in Insertion" << endl;
+        else {
+            cout << "Operation OK!" << endl;
+        }
+
+        cout<<endl<<"Exn Output Message "<<string_message <<endl;
     }
 	sqlite3_close(DB);
     return return_val;
@@ -1301,7 +1288,7 @@ void Database::updateItemsSold(Item item, long long int quantity)
 long long int Database::getItemsSold(long long int id) 
 {
     //connection establised
-sqlite3* DB;
+    sqlite3* DB;
 	int exit = 0;
 	DB = this->establish_connection(exit);
 
@@ -1310,7 +1297,6 @@ sqlite3* DB;
     
     // string check = ;
     
-    string insert_1 = "INSERT INTO Sold_by_date VALUES(";
     // string item_id_1 = to_string(Item_id);
 
     // INSERT INTO Sold_by_date VALUES(2,24,"2022-03-07");
@@ -1345,7 +1331,8 @@ sqlite3* DB;
 
     cout<<"\nOutput Message "<<string_message<<endl;
 
-    if (ans=="") return 0;
+    if (ans=="") {cout << "No data for this id";return 0;}
+    std::cout << "Ans is " << ans << "but value going is " << stoll(ans) << "\n";
     return stoll(ans);
 }
 

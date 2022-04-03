@@ -30,7 +30,9 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
     T.clear();
 
     for (auto currentPair : all_items){
+        std::cout << "for loop is running \n";
         forecast.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Forecast);
+        std::cout << " Forecast has been retrieved \n";
         smoothed_error.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Smoothed_error);
         MADt.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().MADt);
         T.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().T);
@@ -65,7 +67,7 @@ void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
   case ShopState::Event::kEmployeeAttendanceCalled:
     shop->setState(EmployeeAttendanceDisplay::getInstance());
     break;
-  
+
   case ShopState::Event::kStockInfoCalled:
     shop->setState(StockInfo::getInstance());
     break;
@@ -87,7 +89,11 @@ void AdminOptionSelection::update_smoothed_error( ){
     long long n = smoothed_error.size();
     for (int i =0; i<n;i++){
         double error = demand[i]- forecast[i];
+        std::cout << " Demand : " << demand[i]<< std::endl;
+        std::cout << " Initial forecast : "<< forecast[i] << std::endl;
+        std::cout << " Smoothed error initially : " << smoothed_error[i] << std::endl;
         smoothed_error[i] = (alpha*error + (1-alpha)*(smoothed_error[i]) );
+        std::cout << " Smoothed error finally : " << smoothed_error[i] << std::endl;
     }
     return;
 }
@@ -109,7 +115,12 @@ void AdminOptionSelection::update_MADt(){
 void AdminOptionSelection::T_calculater(){
     long long n = MADt.size();
     for (int i =0; i<n; i++){
+        if (MADt[i] == 0){
+          T[i] = 1;
+        }
+        else{
         T[i] = (smoothed_error[i]/MADt[i]);
+        }
     }
     return;
 }
