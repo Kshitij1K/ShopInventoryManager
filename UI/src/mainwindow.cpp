@@ -68,6 +68,7 @@ void MainWindow::loginButtonPressed() {
             ui->stackedWidget->setCurrentIndex(1);
         } else {
             ui->stackedWidget->setCurrentIndex(7);
+            refreshInvoiceTable();
         }
         ui->username_field->clear();
         ui->password_field->clear();
@@ -82,6 +83,7 @@ void MainWindow::resetButtonPressed() {
 void MainWindow::logoutButtonPressed() {
     ui->stackedWidget->setCurrentIndex(0);
     shop_->callEvent(ShopState::Event::kExitCalled);
+    refreshInvoiceTable();
 }
 
 void MainWindow::stockInfoRequested() {
@@ -129,6 +131,7 @@ void MainWindow::updateItemStock() {
 void MainWindow::recommendationPageRequested() {
     ui->stackedWidget->setCurrentIndex(4);
     shop_->callEvent(ShopState::Event::kRestockSuggestionCalled);
+    ui->restocking_suggestion_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 }
 
 void MainWindow::adminBackButtonPressed() {
@@ -150,11 +153,11 @@ void MainWindow::prepareStockInfoTable(ItemStocks items) {
     long long int num_items = items.size();
     ui->stock_info_table->setRowCount(num_items);
     ui->stock_info_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->stock_info_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
     
     int count = 0;
     for (auto item_ : items) {
         long long int stock = item_.second;
-        double profit = stock*(item_.first.selling_price-item_.first.buying_price);
         
         auto item_name_disp = new QTableWidgetItem(QString(item_.first.item_name.c_str()));
         auto holding_price_disp = new QTableWidgetItem(QString(std::to_string(item_.first.holding_price).c_str()));
@@ -163,7 +166,6 @@ void MainWindow::prepareStockInfoTable(ItemStocks items) {
         auto item_id_disp = new QTableWidgetItem(QString(std::to_string(item_.first.item_id).c_str()));
         
         auto stock_disp = new QTableWidgetItem(QString(std::to_string(stock).c_str()));
-        auto profit_disp = new QTableWidgetItem(QString(std::to_string(profit).c_str()));
         
 
         ui->stock_info_table->setItem(count, 0, item_id_disp);
@@ -172,7 +174,6 @@ void MainWindow::prepareStockInfoTable(ItemStocks items) {
         ui->stock_info_table->setItem(count, 3, holding_price_disp);
         ui->stock_info_table->setItem(count, 4, selling_price_disp);
         ui->stock_info_table->setItem(count, 5, stock_disp);
-        ui->stock_info_table->setItem(count, 6, profit_disp);
 
         count++;
     }
@@ -231,6 +232,7 @@ void MainWindow::refreshInvoiceTable() {
     total_amount_ = 0;
     ui->invoice_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
     ui->invoice_table->setRowCount(shop_->consumer_cart.size());
+    ui->invoice_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
 
     int count = 0;
     for (auto item_:shop_->consumer_cart) {

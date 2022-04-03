@@ -1167,7 +1167,6 @@ LoginResult Database::verifyCredentials(std::string username, std::string passwo
 
 	exit = sqlite3_exec(DB, query.c_str(), callback_login_string, &ans, &messaggeError);
     // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
-    std::cout << "ans is" << ans[0] << " and " << ans[1] << "\n";
 
     if (exit != SQLITE_OK)
         cout << "Search Query Failed" << endl;
@@ -1189,7 +1188,7 @@ LoginResult Database::verifyCredentials(std::string username, std::string passwo
 
     cout<<"\nOutput Message "<<string_message<<endl;
 
-    if (ans[0] == password) {
+    if (ans.size() != 0 && ans[0] == password) {
         if (ans[1] == "1") return LoginResult::kAdmin;
         return LoginResult::kEmployee;
     }

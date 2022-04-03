@@ -25,6 +25,7 @@ void EmployeePortal::eventCalled(Event event, Shop* shop) {
   
   case Event::kExitCalled:
     shop->setState(Login::getInstance());
+    shop->consumer_cart.clear();
     break;
   }
 }

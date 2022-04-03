@@ -197,7 +197,7 @@
          </layout>
         </widget>
         <widget class="QWidget" name="page_3">
-         <layout class="QVBoxLayout" name="verticalLayout" stretch="14,10,10,10,10,10,2">
+         <layout class="QVBoxLayout" name="verticalLayout" stretch="14,10,10,10,10,2">
           <item>
            <widget class="QLabel" name="label_6">
             <property name="font">
@@ -312,43 +312,6 @@
             </item>
             <item>
              <spacer name="horizontalSpacer_15">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_5">
-            <item>
-             <spacer name="horizontalSpacer_50">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="view_attendance_info">
-              <property name="text">
-               <string>See Employee Attendance</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_51">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
@@ -492,11 +455,6 @@
             <column>
              <property name="text">
               <string>Current Stock</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>Profit</string>
              </property>
             </column>
            </widget>
