@@ -47,6 +47,16 @@ static int callback_simple_string(void* data, int argc, char** argv, char** azCo
 
     return 0;
 }
+
+static int callback_login_string(void* data, int argc, char** argv, char** azColName)
+{
+    std::vector<std::string>* str = (std::vector<std::string>*)data;
+    
+    str->push_back(std::string(argv[0]));
+    str->push_back(std::string(argv[1]));
+    
+    return 0;
+}
  
 static int callback_iteminfo(void* data, int argc, char** argv, char** azColName)
 {
@@ -1130,6 +1140,61 @@ void Database::changeEmployeeCredentials(std::string name, std::string new_usern
 
         	sqlite3_close(DB);
 
+}
+
+LoginResult Database::verifyCredentials(std::string username, std::string password) {
+    sqlite3* DB;
+	int exit = 0;
+	DB = this->establish_connection(exit);
+
+    long long int sto_1 ;
+    char* messaggeError =NULL;
+    
+    // string check = ;
+    
+    // string insert_1 = "INSERT INTO Sold_by_date VALUES(";
+    // string item_id_1 = to_string(Item_id);
+
+    // INSERT INTO Sold_by_date VALUES(2,24,"2022-03-07");
+
+    // std::string query = "SELECT Quantity FROM Sold_Items WHERE (Item_ID = '"+std::to_string(item.item_id)+"');";
+    std::string query = "SELECT Password, isAdmin FROM Passwords WHERE Username = '" + username + "';";
+
+    // string query  = "SELECT EXISTS(SELECT * from Sold_Items WHERE Item_ID=" + std::to_string(item.item_id) + ")  ;";
+    cout<<"\n SQLQuery: "<<query<<endl ;
+ 
+    std::vector<string> ans;
+
+	exit = sqlite3_exec(DB, query.c_str(), callback_login_string, &ans, &messaggeError);
+    // exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &messaggeError);
+    std::cout << "ans is" << ans[0] << " and " << ans[1] << "\n";
+
+    if (exit != SQLITE_OK)
+        cout << "Search Query Failed" << endl;
+    else {
+        cout << "Operation OK!" << endl;
+    }
+
+
+    std::string string_message;
+    if (messaggeError==NULL)
+    {
+        string_message=="";
+        // cout<<"DEBUG1;";
+    }
+    else
+    {
+        string_message = messaggeError;
+    }
+
+    cout<<"\nOutput Message "<<string_message<<endl;
+
+    if (ans[0] == password) {
+        if (ans[1] == "1") return LoginResult::kAdmin;
+        return LoginResult::kEmployee;
+    }
+    
+    return LoginResult::KNone;
 }
 
 void Database::updateItemsSold(Item item, long long int quantity) 

@@ -13,6 +13,12 @@ enum class ItemUpdateResults {
   kStockNegative,
 };
 
+enum class LoginResult {
+  kEmployee,
+  kAdmin,
+  KNone,
+};
+
 struct Item {
   long long int item_id;
   std::string item_name;
@@ -49,7 +55,7 @@ class Database
     //added later
   sqlite3* establish_connection(int &);
 
-
+  LoginResult verifyCredentials(std::string username, std::string password);
 
   void updateEmployeeLogin(std::string employee_name, std::string time,std::string date="");
   // void updateEmployeeLogin(std::string employee_name, std::string time);
@@ -58,6 +64,8 @@ class Database
   // void updateEmployeeLogout(std::string employee_name, std::string time);
   AttendanceRecord getEmployeeAttendance(std::string employee_name,
                                          std::string date);
+
+
 
   void addEmployee(std::string name, std::string username, std::string password, bool is_admin);
   void removeEmployee(std::string name);

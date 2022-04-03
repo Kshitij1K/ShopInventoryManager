@@ -69,6 +69,8 @@ void MainWindow::loginButtonPressed() {
         } else {
             ui->stackedWidget->setCurrentIndex(7);
         }
+        ui->username_field->clear();
+        ui->password_field->clear();
     }
 }
 
