@@ -35,6 +35,7 @@ public:
     void forecastButtonPressed();
     void generateInvoiceCalled();
     void cancelInvoiceCalled();
+    void computeSuggestionButtonPressed();
     
     void addEmployeeRequest();
     void addEmployeeAsAdminRequest();

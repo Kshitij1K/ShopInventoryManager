@@ -33,6 +33,7 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     QObject::connect(ui->Back_Button, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     QObject::connect(ui->addChangeEmployeeBackButton, &QPushButton::clicked, this, &MainWindow::adminBackButtonPressed);
     
+    QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::computeSuggestionButtonPressed);
 
     QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
     QObject::connect(ui->Add_Button, &QPushButton::clicked, this, &MainWindow::addNewItem);
@@ -324,6 +325,11 @@ void MainWindow::deleteEmployeeRequest(){
 
 void MainWindow::forecastButtonPressed() {
     shop_->callEvent(ShopState::Event::kForecastUpdateCalled);
+}
+
+void MainWindow::computeSuggestionButtonPressed () {
+    shop_->restocking_capital_available = ui->capital_input_field->text().toDouble();
+    shop_->callEvent(ShopState::Event::kRestockSuggestionAsked);
 }
 
 #include "moc_mainwindow.cpp"

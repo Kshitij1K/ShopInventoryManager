@@ -1,16 +1,18 @@
 cd Database/build
-make
+cmake --build .
 cd ../..
 
 cd StateMachine/build
-make
+cmake --build .
+
 cd ../..
 
 cd UI/build
-make
+cmake --build .
+
 cd ../..
 
 cd main/build
-make
+cmake --build .
 shop_inventory_manager.exe
 cd ../..

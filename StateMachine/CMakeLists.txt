@@ -30,6 +30,7 @@ add_library(
   src/states/employee_attendance_display.cpp
   src/states/stock_info.cpp
   src/states/change_login_info.cpp
+  src/states/restocking_suggestion.cpp
 )
 # target_link_libraries(
 #   ${PROJECT_NAME}

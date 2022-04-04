@@ -76,7 +76,8 @@ std::vector<long long >  optimizer(std::vector<long long> current_inventory, std
 using namespace std;
 std::vector<long long> read_and_optimize(){
   ifstream datafile;
-  datafile.open("../ShopInventoryManager/optimizer/data.txt"); //Need Relative Path from or-tools library
+  // datafile.open("../ShopInventoryManager/optimizer/data.txt"); //Need Relative Path from or-tools library
+  datafile.open("..\\..\\optimizer\\data.txt"); //Need Relative Path from or-tools library
   string data;
   vector<double> buying_price,selling_price,holding_cost,forecast;
   long double capital;
@@ -143,7 +144,9 @@ std::vector<long long> read_and_optimize(){
 
 void write(std::vector<long long> solution){
   ofstream datafile;
-  datafile.open("../ShopInventoryManager/optimizer/data.txt", ofstream::trunc);
+  // datafile.open("../ShopInventoryManager/optimizer/data.txt", ofstream::trunc);
+  datafile.open("..\\..\\optimizer\\data.txt"); //Need Relative Path from or-tools library
+
   for(int i =0; i< solution.size();i++){
     datafile<< solution[i]<<endl;
   }
@@ -152,6 +155,7 @@ void write(std::vector<long long> solution){
 int main(){
   std::vector<long long> solution = read_and_optimize();
   write(solution);
+  std::cout << "OPtimizer is running\n";
   return(0);
 }
 

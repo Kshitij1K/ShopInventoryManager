@@ -7,7 +7,6 @@ ShopState& Login::getInstance() {
 
 void Login::enter(Shop* shop) {
   std::cout << "Entered State Login\n";
-  std::cout << shop->database.getItemsSold(8686);;
 }
 
 void Login::exit(Shop* shop) {

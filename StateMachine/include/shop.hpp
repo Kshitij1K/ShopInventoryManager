@@ -13,7 +13,7 @@ class Shop {
 
   std::string username;
   std::string password;
-  long long int restocking_capital_available;
+  double restocking_capital_available;
   long long int scanned_item_id;
   std::vector<std::pair<long long int, int>> items_bought;
   long double capital;

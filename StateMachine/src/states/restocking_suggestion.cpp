@@ -1,6 +1,9 @@
 #include <all_shop_states.hpp>
 #include <fstream>
-
+#include <windows.h>
+#include <string>
+#include <iostream>
+#include <filesystem>
 using namespace std;
 
 ShopState& RestockingSuggestion::getInstance() {
@@ -10,6 +13,28 @@ ShopState& RestockingSuggestion::getInstance() {
 
 void RestockingSuggestion::enter(Shop* shop) {}
 void RestockingSuggestion::exit(Shop* shop) {}
+
+void RestockingSuggestion::execCommand(){
+  STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+
+    ZeroMemory( &si, sizeof(si) );
+    si.cb = sizeof(si);
+    ZeroMemory( &pi, sizeof(pi) );
+
+    // Start the child process. 
+    int retvalue =   CreateProcess( TEXT("..\\..\\optimizer\\build\\DEBUG\\optimizer.exe"),   // No module name (use command line)
+        NULL,        // Command line
+        NULL,           // Process handle not inheritable
+        NULL,           // Thread handle not inheritable
+        FALSE,          // Set handle inheritance to FALSE
+        0,              // No creation flags
+        NULL,           // Use parent's environment block
+        NULL,           // Use parent's starting directory 
+        &si,            // Pointer to STARTUPINFO structure
+        &pi            // Pointer to PROCESS_INFORMATION structure
+    );
+}
 
 void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
   switch (event)
@@ -39,20 +64,49 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
     }
     */
     ofstream datafile;
+    // std::filesystem::path cwd = std::filesystem::current_path();
+    // std::cout << cwd.string() << "BRUHHH\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
     datafile.open("../../optimizer/data.txt",ofstream::trunc);
-    datafile << shop->capital <<endl;
+    datafile << 2000 <<endl;
     for (auto current_pair : all_items){
       Item item = current_pair.first;
       datafile << current_pair.second << "," <<item.buying_price << "," << item.selling_price << "," << item.holding_price << ",";
       datafile << 2*shop->database.retrieve_predict_data_basis_of_id(item.item_id).front().Forecast <<endl;
     }
+    execCommand();
 
-    // Writing
+    // system("cd ..");
+    // system("cd ..");
+    // system("cd ..");
+    // system("dir");
+    // system("cd ..");
+    // system("dir");
+
+    // system("cd bin");
+    // system("optimizer.exe");
+
+    // ShellExecute(NULL, "dir", "", NULL, NULL, SW_SHOWDEFAULT);
+    // cdExecCommand();
+    // system("..\\..\\..\\or_tools\\bin\\optimizer.exe");
+    // system("cd ..");
+    // system("cd ..");
+    // system("cd ShopInventoryManager");
+    // system("cd main");
+    // system("cd build");
+
+
+    // // Writing
     ifstream datafile2;
     datafile2.open("../../optimizer/data.txt",ifstream::trunc);
     string value;
+    std::cout << "Values: \n";
     while(getline(datafile2,value)){
       shop->restocking_solution.push_back(stod(value));
+      std::cout << "This ran\n";
+    }
+
+    for (auto it:shop->restocking_solution) {
+      std::cout << "Val: " << it << "\n";
     }
 
     break;

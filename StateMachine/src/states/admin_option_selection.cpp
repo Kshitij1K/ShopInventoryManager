@@ -15,9 +15,9 @@ void AdminOptionSelection::exit(Shop* shop) {
 void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
   switch (event)
   {
-  // case ShopState::Event::kRestockSuggestionCalled:
-  //   shop->setState(RestockingSuggestion::getInstance());
-  //   break;
+  case ShopState::Event::kRestockSuggestionCalled:
+    shop->setState(RestockingSuggestion::getInstance());
+    break;
 
   case ShopState::Event::kForecastUpdateCalled:
     //shop->database.Insert_predict_data();
