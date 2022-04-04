@@ -47,6 +47,14 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
       datafile << 2*shop->database.retrieve_predict_data_basis_of_id(item.item_id).front().Forecast <<endl;
     }
 
+    // Writing
+    ifstream datafile2;
+    datafile2.open("../../optimizer/data.txt",ifstream::trunc);
+    string value;
+    while(getline(datafile2,value)){
+      shop->restocking_solution.push_back(stod(value));
+    }
+
     break;
   }
   default:
