@@ -8,13 +8,14 @@
 
 
 
-using namespace std;
-void optimizer(std::vector<long long> current_inventory, std::vector<double> buying_price, std::vector<double> selling_price, std::vector<double> holding_cost, std::vector<double> forecast, long double capital) {
+namespace operations_research{
+std::vector<long long >  optimizer(std::vector<long long> current_inventory, std::vector<double> buying_price, std::vector<double> selling_price, std::vector<double> holding_cost, std::vector<double> forecast, long double capital) {
   // Create the mip solver with the SCIP backend.
+  std::vector<long long> solution;
   std::unique_ptr<MPSolver> solver(MPSolver::CreateSolver("SCIP"));
   if (!solver) {
     LOG(WARNING) << "SCIP solver unavailable.";
-    return;
+    return solution;
   }
   long long n = current_inventory.size();
   const double infinity = solver->infinity();
@@ -63,33 +64,35 @@ void optimizer(std::vector<long long> current_inventory, std::vector<double> buy
   //LOG(INFO) << "Solution:";
   //LOG(INFO) << "Optimal objective value = " << objective->Value();
 
-
-  ofstream datafile;
-  datafile.open("data.txt",ofstream:: trunc);
   for(long long int i=0;i<n;i++){
-    datafile << x[i]->solution_value() <<endl;
+    solution.push_back(x[i]->solution_value());
   }
 
-  return;
+  return(solution);
 
+}
 }
 
 using namespace std;
-void read_and_optimize(){
+std::vector<long long> read_and_optimize(){
   ifstream datafile;
-  datafile.open("data.txt");
+  datafile.open("../ShopInventoryManager/optimizer/data.txt"); //Need Relative Path from or-tools library
   string data;
   vector<double> buying_price,selling_price,holding_cost,forecast;
   long double capital;
   vector<long long> current_inventory;
 
   getline(datafile, data);
+  //cout << data<<endl;
   capital = stold(data);
+  //cout <<capital<<endl;
   while(getline(datafile,data)){
+    //cout <<"Hello"<<endl;
     stringstream linestream(data);
     string value;
     int i = 0;
     while(getline(linestream,value,',')){
+      //cout << value <<endl;
       switch(i){
         case 0: 
         {
@@ -129,34 +132,30 @@ void read_and_optimize(){
       }
       i++;
     }
+
   }
-  optimizer(current_inventory,buying_price,selling_price,holding_cost,forecast,capital);
-  return;
-  
+
+  std::vector<long long> solution;
+  solution = operations_research::optimizer(current_inventory,buying_price,selling_price,holding_cost,forecast,capital);
+  ofstream datafile2;
+  return(solution);
 }
 
+void write(std::vector<long long> solution){
+  ofstream datafile;
+  datafile.open("../ShopInventoryManager/optimizer/data.txt", ofstream::trunc);
+  for(int i =0; i< solution.size();i++){
+    datafile<< solution[i]<<endl;
+  }
+}
 
 int main(){
-  read_and_optimize();
+  std::vector<long long> solution = read_and_optimize();
+  write(solution);
   return(0);
 }
-*/
 
 
-/*
-int main(int argc, char** argv) {
-  std::vector<double> current_inventory;
-  std::vector<double> buying_price,selling_price,holding_cost,forecast;
-  long double capital = 10000;
-  current_inventory  = {10,20,30};
-  buying_price = {120,130,140};
-  selling_price = {140,150,160};
-  holding_cost = {5,5,5};
-  forecast = {40,40,40};
-
-  MipVarArray(current_inventory, buying_price,selling_price,holding_cost,forecast,capital);
-  return EXIT_SUCCESS;
-}
 
 
 
