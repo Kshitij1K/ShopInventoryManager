@@ -1,7 +1,7 @@
 #pragma once
-#include <string>
-#include <shop_state.hpp>
 #include <database.hpp>
+#include <shop_state.hpp>
+#include <string>
 
 class Shop {
  public:

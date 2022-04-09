@@ -11,29 +11,31 @@ void ChangeLoginInfo::enter(Shop* shop) {
 
 void ChangeLoginInfo::exit(Shop* shop) {
   std::cout << "Exited State ChangeLoginInfo\n";
-
 }
 
 void ChangeLoginInfo::eventCalled(Event event, Shop* shop) {
-  switch (event)
-  {
-  case Event::kAddEmployeeCredentialsCalled:
-    shop->database.addEmployee(shop->employee_name, shop->employee_username, shop->employee_password, false);
-    break;
+  switch (event) {
+    case Event::kAddEmployeeCredentialsCalled:
+      shop->database.addEmployee(shop->employee_name, shop->employee_username,
+                                 shop->employee_password, false);
+      break;
 
-  case Event::kAddAdminCredentialsCalled:
-    shop->database.addEmployee(shop->employee_name, shop->employee_username, shop->employee_password, true);
-    break;
-  
-  case Event::kCredentialsChanged:
-    shop->database.changeEmployeeCredentials(shop->employee_name, shop->employee_username, shop->employee_password);
-    break;
+    case Event::kAddAdminCredentialsCalled:
+      shop->database.addEmployee(shop->employee_name, shop->employee_username,
+                                 shop->employee_password, true);
+      break;
 
-  case Event::kEmployeeDeleted:
-    shop->database.removeEmployee(shop->employee_name);
-  
-  default:
-    break;
+    case Event::kCredentialsChanged:
+      shop->database.changeEmployeeCredentials(shop->employee_name,
+                                               shop->employee_username,
+                                               shop->employee_password);
+      break;
+
+    case Event::kEmployeeDeleted:
+      shop->database.removeEmployee(shop->employee_name);
+
+    default:
+      break;
   }
 }
 

@@ -13,5 +13,4 @@ class EmployeePortal : public ShopState {
   EmployeePortal();
   EmployeePortal(const EmployeePortal& other);
   EmployeePortal& operator=(const EmployeePortal& other);
-
 };

@@ -13,130 +13,145 @@ void AdminOptionSelection::exit(Shop* shop) {
 }
 
 void AdminOptionSelection::eventCalled(Event event, Shop* shop) {
-  switch (event)
-  {
-  case ShopState::Event::kRestockSuggestionCalled:
-    shop->setState(RestockingSuggestion::getInstance());
-    break;
-
-  case ShopState::Event::kForecastUpdateCalled:
-    //shop->database.Insert_predict_data();
-    {
-    ItemStocks all_items = shop->database.getAllItemStocks();
-    forecast.clear();
-    demand.clear();
-    smoothed_error.clear();
-    MADt.clear();
-    T.clear();
-
-    for (auto currentPair : all_items){
-        std::cout << "for loop is running \n";
-        forecast.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Forecast);
-        std::cout << " Forecast has been retrieved \n";
-        smoothed_error.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().Smoothed_error);
-        MADt.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().MADt);
-        T.push_back(shop->database.retrieve_predict_data_basis_of_id(currentPair.first.item_id).front().T);
-        demand.push_back(shop->database.getItemsSold(currentPair.first.item_id));
-    }
-
-    update_forecast();
-    long long int i =0;
-    for (auto currentPair : all_items){
-      Predict_data_type item_data;
-      item_data.item_id = currentPair.first.item_id;
-      item_data.Forecast = forecast[i];
-      item_data.MADt = MADt[i];
-      item_data.Smoothed_error = smoothed_error[i];
-      item_data.T = T[i];
-      shop->database.Insert_predict_data(item_data);
-
-      i++;
-    }
+  switch (event) {
+    case ShopState::Event::kRestockSuggestionCalled:
+      shop->setState(RestockingSuggestion::getInstance());
       break;
-    }
 
+    case ShopState::Event::kForecastUpdateCalled:
+      // shop->database.Insert_predict_data();
+      {
+        ItemStocks all_items = shop->database.getAllItemStocks();
+        forecast.clear();
+        demand.clear();
+        smoothed_error.clear();
+        MADt.clear();
+        T.clear();
 
-  case ShopState::Event::kChangeCredentialsPageCalled:
-    shop->setState(ChangeLoginInfo::getInstance());
-    break;
+        for (auto currentPair : all_items) {
+          std::cout << "for loop is running \n";
+          forecast.push_back(
+              shop->database
+                  .retrieve_predict_data_basis_of_id(currentPair.first.item_id)
+                  .front()
+                  .Forecast);
+          std::cout << " Forecast has been retrieved \n";
+          smoothed_error.push_back(
+              shop->database
+                  .retrieve_predict_data_basis_of_id(currentPair.first.item_id)
+                  .front()
+                  .Smoothed_error);
+          MADt.push_back(
+              shop->database
+                  .retrieve_predict_data_basis_of_id(currentPair.first.item_id)
+                  .front()
+                  .MADt);
+          T.push_back(
+              shop->database
+                  .retrieve_predict_data_basis_of_id(currentPair.first.item_id)
+                  .front()
+                  .T);
+          demand.push_back(
+              shop->database.getItemsSold(currentPair.first.item_id));
+        }
 
-  case ShopState::Event::kItemUpdateCalled:
-    shop->setState(ItemUpdate::getInstance());
-    break;
+        update_forecast();
+        long long int i = 0;
+        for (auto currentPair : all_items) {
+          Predict_data_type item_data;
+          item_data.item_id = currentPair.first.item_id;
+          item_data.Forecast = forecast[i];
+          item_data.MADt = MADt[i];
+          item_data.Smoothed_error = smoothed_error[i];
+          item_data.T = T[i];
+          shop->database.Insert_predict_data(item_data);
 
-  case ShopState::Event::kEmployeeAttendanceCalled:
-    shop->setState(EmployeeAttendanceDisplay::getInstance());
-    break;
+          i++;
+        }
+        break;
+      }
 
-  case ShopState::Event::kStockInfoCalled:
-    shop->setState(StockInfo::getInstance());
-    break;
+    case ShopState::Event::kChangeCredentialsPageCalled:
+      shop->setState(ChangeLoginInfo::getInstance());
+      break;
 
-  case ShopState::Event::kExitCalled:
-    shop->setState(Login::getInstance());
-    break;
+    case ShopState::Event::kItemUpdateCalled:
+      shop->setState(ItemUpdate::getInstance());
+      break;
 
-  default:
-    break;
+    case ShopState::Event::kEmployeeAttendanceCalled:
+      shop->setState(EmployeeAttendanceDisplay::getInstance());
+      break;
+
+    case ShopState::Event::kStockInfoCalled:
+      shop->setState(StockInfo::getInstance());
+      break;
+
+    case ShopState::Event::kExitCalled:
+      shop->setState(Login::getInstance());
+      break;
+
+    default:
+      break;
   }
 }
 
-AdminOptionSelection::AdminOptionSelection(){}
+AdminOptionSelection::AdminOptionSelection() {}
 
-void AdminOptionSelection::update_smoothed_error( ){
-    //std::vector<long double> smoothed_error;
-    double alpha = 0.3;
-    long long n = smoothed_error.size();
-    for (int i =0; i<n;i++){
-        double error = demand[i]- forecast[i];
-        std::cout << " Demand : " << demand[i]<< std::endl;
-        std::cout << " Initial forecast : "<< forecast[i] << std::endl;
-        std::cout << " Smoothed error initially : " << smoothed_error[i] << std::endl;
-        smoothed_error[i] = (alpha*error + (1-alpha)*(smoothed_error[i]) );
-        std::cout << " Smoothed error finally : " << smoothed_error[i] << std::endl;
-    }
-    return;
+void AdminOptionSelection::update_smoothed_error() {
+  // std::vector<long double> smoothed_error;
+  double alpha = 0.3;
+  long long n = smoothed_error.size();
+  for (int i = 0; i < n; i++) {
+    double error = demand[i] - forecast[i];
+    std::cout << " Demand : " << demand[i] << std::endl;
+    std::cout << " Initial forecast : " << forecast[i] << std::endl;
+    std::cout << " Smoothed error initially : " << smoothed_error[i]
+              << std::endl;
+    smoothed_error[i] = (alpha * error + (1 - alpha) * (smoothed_error[i]));
+    std::cout << " Smoothed error finally : " << smoothed_error[i] << std::endl;
+  }
+  return;
 }
 
-void AdminOptionSelection::update_MADt(){
-    //std::vector<long double> MADt;
-    double alpha = 0.3;
-    long long n = MADt.size();
-    for (int i=0; i<n; i++){
-        double error = demand[i]-forecast[i];
-        if(error<0){
-            error = -error;
-        }
-        MADt[i] = (alpha*error + (1-alpha)*(MADt[i]));
+void AdminOptionSelection::update_MADt() {
+  // std::vector<long double> MADt;
+  double alpha = 0.3;
+  long long n = MADt.size();
+  for (int i = 0; i < n; i++) {
+    double error = demand[i] - forecast[i];
+    if (error < 0) {
+      error = -error;
     }
-    return;
+    MADt[i] = (alpha * error + (1 - alpha) * (MADt[i]));
+  }
+  return;
 }
 
-void AdminOptionSelection::T_calculater(){
-    long long n = MADt.size();
-    for (int i =0; i<n; i++){
-        if (MADt[i] == 0){
-          T[i] = 1;
-        }
-        else{
-        T[i] = (smoothed_error[i]/MADt[i]);
-        }
+void AdminOptionSelection::T_calculater() {
+  long long n = MADt.size();
+  for (int i = 0; i < n; i++) {
+    if (MADt[i] == 0) {
+      T[i] = 1;
+    } else {
+      T[i] = (smoothed_error[i] / MADt[i]);
     }
-    return;
+  }
+  return;
 }
 
-void AdminOptionSelection::update_forecast(){
-    long long n = smoothed_error.size();
-    update_smoothed_error();
-    update_MADt();
-    T_calculater();
-    for (int i=0; i<n; i++){
-        double T_coeff = T[i];
-        if(T_coeff<0){
-            T_coeff = -T_coeff;
-        }
-        double error = demand[i] - forecast[i];
-        forecast[i] = (forecast[i] + T_coeff*error);
+void AdminOptionSelection::update_forecast() {
+  long long n = smoothed_error.size();
+  update_smoothed_error();
+  update_MADt();
+  T_calculater();
+  for (int i = 0; i < n; i++) {
+    double T_coeff = T[i];
+    if (T_coeff < 0) {
+      T_coeff = -T_coeff;
     }
-    return;
+    double error = demand[i] - forecast[i];
+    forecast[i] = (forecast[i] + T_coeff * error);
+  }
+  return;
 }

@@ -1,5 +1,6 @@
-#include <shop.hpp>
 #include <all_shop_states.hpp>
+#include <shop.hpp>
+
 
 Shop::Shop() {
   current_state_ = &Login::getInstance();
@@ -16,6 +17,4 @@ void Shop::callEvent(ShopState::Event event) {
   current_state_->eventCalled(event, this);
 }
 
-Shop::~Shop() {
-  current_state_->exit(this);
-}
+Shop::~Shop() { current_state_->exit(this); }

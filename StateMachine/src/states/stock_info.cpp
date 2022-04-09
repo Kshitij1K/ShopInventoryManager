@@ -10,15 +10,12 @@ void StockInfo::enter(Shop* shop) {
   shop->stocks = shop->database.getAllItemStocks();
 }
 
-void StockInfo::exit(Shop* shop) {
-  std::cout << "Exited state Stock Info\n";
-}
+void StockInfo::exit(Shop* shop) { std::cout << "Exited state Stock Info\n"; }
 
 StockInfo::StockInfo() {}
 
 void StockInfo::eventCalled(Event event, Shop* shop) {
-  switch (event)
-  {
+  switch (event) {
     case ShopState::Event::kExitCalled:
       shop->setState(AdminOptionSelection::getInstance());
       break;

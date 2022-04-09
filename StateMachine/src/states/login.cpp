@@ -5,14 +5,9 @@ ShopState& Login::getInstance() {
   return singleton;
 }
 
-void Login::enter(Shop* shop) {
-  std::cout << "Entered State Login\n";
-}
+void Login::enter(Shop* shop) { std::cout << "Entered State Login\n"; }
 
-void Login::exit(Shop* shop) {
-  std::cout << "Exited State Login\n";
-
-}
+void Login::exit(Shop* shop) { std::cout << "Exited State Login\n"; }
 
 void Login::eventCalled(Event event, Shop* shop) {
   if (event == Event::kLoginCalled) {
@@ -29,27 +24,26 @@ void Login::eventCalled(Event event, Shop* shop) {
     //   shop->setState(Login::getInstance());
     // }
 
-    auto result = shop->database.verifyCredentials(shop->username, shop->password);
-    switch (result)
-    {
-    case LoginResult::kEmployee:
-      shop->is_admin_login = false;
-      shop->are_credentials_correct = true;
-      shop->setState(EmployeePortal::getInstance());
-      break;
+    auto result =
+        shop->database.verifyCredentials(shop->username, shop->password);
+    switch (result) {
+      case LoginResult::kEmployee:
+        shop->is_admin_login = false;
+        shop->are_credentials_correct = true;
+        shop->setState(EmployeePortal::getInstance());
+        break;
 
-    case LoginResult::kAdmin:
-      shop->is_admin_login = true;
-      shop->are_credentials_correct = true;
-      shop->setState(AdminOptionSelection::getInstance());
-      break;
+      case LoginResult::kAdmin:
+        shop->is_admin_login = true;
+        shop->are_credentials_correct = true;
+        shop->setState(AdminOptionSelection::getInstance());
+        break;
 
-    default:
-      shop->are_credentials_correct = false;
-      shop->setState(Login::getInstance());
-      break;
+      default:
+        shop->are_credentials_correct = false;
+        shop->setState(Login::getInstance());
+        break;
     }
-
   }
 }
 
