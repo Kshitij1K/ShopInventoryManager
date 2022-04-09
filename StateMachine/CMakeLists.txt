@@ -2,23 +2,13 @@ cmake_minimum_required(VERSION 3.10)
 project(state_machine)
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../Database/build")
-# find_package(shopinventory_ui REQUIRED)
 
 add_definitions(-std=c++17)
 set(CMAKE_BUILD_TYPE Release)
-# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ../bin)
 
 include_directories(include)
 
 find_package(database REQUIRED)
-
-# add_library(admin_option_selection src/states/admin_option_selection.cpp)
-# add_library(employee_attendance_display src/states/employee_attendance_display.cpp)
-# add_library(employee_portal src/states/employee_portal.cpp)
-# add_library(login src/states/login.cpp)
-# add_library(stock_info src/states/stock_info.cpp)
-# add_library(item_update src/states/item_update.cpp)
-# add_library(restocking_suggestion src/states/restocking_suggestion.cpp)
 
 add_library(
   ${PROJECT_NAME} 
@@ -32,12 +22,6 @@ add_library(
   src/states/change_login_info.cpp
   src/states/restocking_suggestion.cpp
 )
-# target_link_libraries(
-#   ${PROJECT_NAME}
-#   login
-#   employee_portal
-#   admin_option_selection
-# )
 
 target_link_libraries(${PROJECT_NAME} PUBLIC database::database)
 
@@ -87,16 +71,3 @@ install(
     FILES cmake/${PROJECT_NAME}-config.cmake
     DESTINATION "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}"
 )
-
-
-# target_link_libraries(admin_option_selection shop)
-# target_link_libraries(employee_attendance_display shop)
-# target_link_libraries(employee_attendance_display shop)
-# target_link_libraries(employee_portal shop)
-# target_link_libraries(login shop)
-# target_link_libraries(stock_info shop)
-# target_link_libraries(item_update shop)
-# target_link_libraries(restocking_suggestion shop)
-
-# add_executable(MAIN src/main.cpp)
-# target_link_libraries(MAIN PUBLIC shopinventory_ui::shopinventory_ui)

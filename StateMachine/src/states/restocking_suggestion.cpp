@@ -56,29 +56,9 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
 
     case ShopState::Event::kRestockSuggestionAsked: {
       ItemStocks all_items = shop->database.getAllItemStocks();
-      /*
-      std::vector<double> buying_price;
-      std::vector<long long> current_inventory;
-      std::vector<double> selling_price;
-      std::vector<double> holding_cost;
-      std::vector<double> forecast;
-      for (auto current_pair : all_items){
-          Item item = current_pair.first;
-          current_inventory.push_back(current_pair.second);
-          buying_price.push_back(item.buying_price);
-          selling_price.push_back(item.selling_price);
-          holding_cost.push_back(item.holding_price);
-          forecast.push_back(2*shop->database.retrieve_predict_data_basis_of_id(item.item_id).front().Forecast);
-          shop->restocking_solution =
-      optimizer(current_inventory,buying_price,selling_price,holding_cost,forecast,shop->restocking_capital_available);
-
-      }
-      */
       ofstream datafile;
-      // std::filesystem::path cwd = std::filesystem::current_path();
-      // std::cout << cwd.string() << "BRUHHH\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n";
       datafile.open("../../optimizer/data.txt", ofstream::trunc);
-      datafile << 2000 << endl;
+      datafile << shop->restocking_capital_available << endl;
       for (auto current_pair : all_items) {
         Item item = current_pair.first;
         datafile << current_pair.second << "," << item.buying_price << ","
@@ -91,28 +71,8 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
       }
       execCommand();
 
-      // system("cd ..");
-      // system("cd ..");
-      // system("cd ..");
-      // system("dir");
-      // system("cd ..");
-      // system("dir");
-
-      // system("cd bin");
-      // system("optimizer.exe");
-
-      // ShellExecute(NULL, "dir", "", NULL, NULL, SW_SHOWDEFAULT);
-      // cdExecCommand();
-      // system("..\\..\\..\\or_tools\\bin\\optimizer.exe");
-      // system("cd ..");
-      // system("cd ..");
-      // system("cd ShopInventoryManager");
-      // system("cd main");
-
-      // // Writing
+      // Writing
       shop->restocking_solution.clear();
-      // std::chrono::seconds dura( 5);
-      // std::this_thread::sleep_for( dura );
       ifstream datafile2;
       datafile2.open("../../optimizer/data.txt");
       string value;

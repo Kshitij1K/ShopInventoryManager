@@ -4,9 +4,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QTableView>
-#include <models/stock_info_model.hpp>
 #include <shop.hpp>
-
 
 namespace Ui {
 class MainWindow;
@@ -41,7 +39,6 @@ class MainWindow : public QMainWindow {
   void addEmployeeAsAdminRequest();
   void deleteEmployeeRequest();
   void changeCredentialsRequest();
-  // void suggestionAsked();
   void addNewItem();
   void updateItemStock();
 
@@ -50,8 +47,6 @@ class MainWindow : public QMainWindow {
  private:
   Ui::MainWindow* ui;
   Shop* shop_;
-
-  StockInfoModel stock_info_model;
 
   void refreshInvoiceTable();
   void refreshSuggestionTable();

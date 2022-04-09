@@ -4,7 +4,6 @@ project(shopinventory_ui CXX)
 # First, create your library. List all the files one by one. Don't use globs
 add_library(${PROJECT_NAME} 
   src/mainwindow.cpp
-  src/models/stock_info_model.cpp
 )
 
 list(APPEND CMAKE_PREFIX_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../StateMachine/build")
