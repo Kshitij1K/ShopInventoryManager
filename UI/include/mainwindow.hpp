@@ -41,7 +41,7 @@ public:
     void addEmployeeAsAdminRequest();
     void deleteEmployeeRequest();
     void changeCredentialsRequest();
-    void suggestionAsked();
+    // void suggestionAsked();
     void addNewItem();
     void updateItemStock();
 
@@ -54,6 +54,7 @@ private:
     StockInfoModel stock_info_model;
 
     void refreshInvoiceTable();
+    void refreshSuggestionTable();
     ItemStocks consumer_cart_;
     double total_amount_;
 };

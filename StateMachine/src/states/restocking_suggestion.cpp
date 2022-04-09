@@ -4,6 +4,8 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <chrono>
+#include <thread>
 using namespace std;
 
 ShopState& RestockingSuggestion::getInstance() {
@@ -11,8 +13,12 @@ ShopState& RestockingSuggestion::getInstance() {
   return singleton;
 }
 
-void RestockingSuggestion::enter(Shop* shop) {}
-void RestockingSuggestion::exit(Shop* shop) {}
+void RestockingSuggestion::enter(Shop* shop) {
+  std::cout << "Entered State Restocking Suggestion.\n";
+}
+void RestockingSuggestion::exit(Shop* shop) {
+  std::cout << "Exited State Restocking Suggestion.\n";
+}
 
 void RestockingSuggestion::execCommand(){
   STARTUPINFO si;
@@ -23,7 +29,7 @@ void RestockingSuggestion::execCommand(){
     ZeroMemory( &pi, sizeof(pi) );
 
     // Start the child process. 
-    int retvalue =   CreateProcess( TEXT("..\\..\\optimizer\\build\\DEBUG\\optimizer.exe"),   // No module name (use command line)
+    auto retvalue =   CreateProcess( TEXT("..\\..\\optimizer\\build\\DEBUG\\optimizer.exe"),   // No module name (use command line)
         NULL,        // Command line
         NULL,           // Process handle not inheritable
         NULL,           // Thread handle not inheritable
@@ -34,6 +40,8 @@ void RestockingSuggestion::execCommand(){
         &si,            // Pointer to STARTUPINFO structure
         &pi            // Pointer to PROCESS_INFORMATION structure
     );
+
+    WaitForSingleObject(pi.hProcess, INFINITE);
 }
 
 void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
@@ -91,16 +99,19 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
     // system("cd ..");
     // system("cd ..");
     // system("cd ShopInventoryManager");
-    // system("cd main");
-    // system("cd build");
+    // system("cd main");       
 
 
     // // Writing
+    shop->restocking_solution.clear();
+    // std::chrono::seconds dura( 5);
+    // std::this_thread::sleep_for( dura );
     ifstream datafile2;
-    datafile2.open("../../optimizer/data.txt",ifstream::trunc);
+    datafile2.open("../../optimizer/data.txt");
     string value;
     std::cout << "Values: \n";
-    while(getline(datafile2,value)){
+    while(datafile2>>value){
+
       shop->restocking_solution.push_back(stod(value));
       std::cout << "This ran\n";
     }

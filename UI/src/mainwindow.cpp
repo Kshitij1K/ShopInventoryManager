@@ -35,7 +35,7 @@ MainWindow::MainWindow(Shop* shop, QWidget *parent) :
     
     QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::computeSuggestionButtonPressed);
 
-    QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
+    // QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this, &MainWindow::suggestionAsked);
     QObject::connect(ui->Add_Button, &QPushButton::clicked, this, &MainWindow::addNewItem);
 
     QObject::connect(ui->Add_Button_Invoice, &QPushButton::clicked, this, &MainWindow::addButtonInvoicePressed);
@@ -145,9 +145,9 @@ void MainWindow::updateItemsRequested() {
 }
 
 
-void MainWindow::suggestionAsked() {
-    shop_->callEvent(ShopState::Event::kRestockSuggestionAsked);
-}
+// void MainWindow::suggestionAsked() {
+//     shop_->callEvent(ShopState::Event::kRestockSuggestionAsked);
+// }
 
 void MainWindow::prepareStockInfoTable(ItemStocks items) {
     long long int num_items = items.size();
@@ -330,6 +330,35 @@ void MainWindow::forecastButtonPressed() {
 void MainWindow::computeSuggestionButtonPressed () {
     shop_->restocking_capital_available = ui->capital_input_field->text().toDouble();
     shop_->callEvent(ShopState::Event::kRestockSuggestionAsked);
+    refreshSuggestionTable();
+}
+
+void MainWindow::refreshSuggestionTable() {
+    total_amount_ = 0;
+    ui->restocking_suggestion_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    ui->restocking_suggestion_table->setRowCount(shop_->restocking_solution.size());
+    ui->restocking_suggestion_table->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeMode::Stretch);
+    auto items_list = shop_->database.getAllItemStocks();
+    int count = 0;
+    for (auto item_it_:items_list) {
+        // double amount = item_.first.selling_price*item_.second;
+        // total_amount_ += amount;
+        
+        auto item_id_disp = new QTableWidgetItem(QString(std::to_string(item_it_.first.item_id).c_str()));
+        auto item_name_disp = new QTableWidgetItem(QString(item_it_.first.item_name.c_str()));
+        auto restock_quantity_disp = new QTableWidgetItem(QString(std::to_string(shop_->restocking_solution[count]).c_str()));
+        // auto amount_disp = new QTableWidgetItem(QString(std::to_string(amount).c_str()));
+        // auto selling_price_disp = new QTableWidgetItem(QString(std::to_string(item_.first.selling_price).c_str()));
+
+        ui->restocking_suggestion_table->setItem(count, 0, item_id_disp);
+        ui->restocking_suggestion_table->setItem(count, 1, item_name_disp);
+        ui->restocking_suggestion_table->setItem(count, 2, restock_quantity_disp);
+        // ui->invoice_table->setItem(i, 3, quantity_disp);
+        // ui->invoice_table->setItem(i, 4, amount_disp);
+        std::cout << "refresh suggestion ran\n\n\n\n\n";
+        count++;
+    }
+
 }
 
 #include "moc_mainwindow.cpp"

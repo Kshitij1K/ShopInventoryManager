@@ -26,7 +26,7 @@ void ItemUpdate::eventCalled(Event event, Shop* shop) {
       break;
 
     case ShopState::Event::kExitCalled:
-      shop->setState(Login::getInstance());
+      shop->setState(AdminOptionSelection::getInstance());
       break;
 
     default:
