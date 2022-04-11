@@ -1,6 +1,8 @@
 #include "mainwindow.hpp"
 #include <iostream>
 #include <shop.hpp>
+#include <chrono>
+#include <thread>
 #include "ui_mainwindow.h"
 
 
