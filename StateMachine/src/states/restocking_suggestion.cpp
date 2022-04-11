@@ -63,7 +63,7 @@ void RestockingSuggestion::eventCalled(Event event, Shop* shop) {
         Item item = current_pair.first;
         datafile << current_pair.second << "," << item.buying_price << ","
                  << item.selling_price << "," << item.holding_price << ",";
-        datafile << 2 * shop->database
+        datafile << 2*shop->database
                             .retrieve_predict_data_basis_of_id(item.item_id)
                             .front()
                             .Forecast

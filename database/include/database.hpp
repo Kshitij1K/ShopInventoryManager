@@ -63,8 +63,8 @@ class Database {
 
   void addEmployee(std::string name, std::string username, std::string password,
                    bool is_admin);
-  void removeEmployee(std::string name);
-  void changeEmployeeCredentials(std::string name, std::string new_username,
+  void removeEmployee(std::string username);
+  void changeEmployeeCredentials(std::string new_name, std::string username,
                                  std::string new_password);
 
   // ItemUpdateResults addNewItem(Item new_item);

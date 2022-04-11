@@ -32,7 +32,10 @@ void ChangeLoginInfo::eventCalled(Event event, Shop* shop) {
       break;
 
     case Event::kEmployeeDeleted:
-      shop->database.removeEmployee(shop->employee_name);
+      shop->database.removeEmployee(shop->employee_username);
+
+    case Event::kExitCalled:
+      shop->setState(AdminOptionSelection::getInstance());
 
     default:
       break;

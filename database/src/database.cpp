@@ -49,6 +49,20 @@ static int callback_login_string(void* data, int argc, char** argv,
   return 0;
 }
 
+static int callback_all_strings(void* data, int argc, char** argv,
+                                char** azColName) {
+  std::vector<std::string>* str = (std::vector<std::string>*)data;
+
+  if (azColName == NULL) return 0;
+  // int size = sizeof(azColName)/sizeof(azColName[0]);
+
+  std::cout << argc << ": Size";
+  // str->push_back(std::string(argv[0]));
+  // str->push_back(std::string(argv[1]));
+
+  return 0;
+}
+
 static int callback_iteminfo(void* data, int argc, char** argv,
                              char** azColName) {
   Item* item = (Item*)data;
@@ -600,7 +614,7 @@ void Database::addEmployee(std::string name, std::string username,
   cout << endl << "Exn Output Message " << string_message << endl;
 }
 
-void Database::removeEmployee(std::string name) {
+void Database::removeEmployee(std::string username) {
   // connection establised
   sqlite3* DB;
   int exit = 0;
@@ -608,11 +622,11 @@ void Database::removeEmployee(std::string name) {
   DB = this->establish_connection(exit);
 
   string query = "";
-  string insert_1 = "DELETE FROM Passwords WHERE Name='";
+  string insert_1 = "DELETE FROM Passwords WHERE Username='";
 
   char* error_msg = NULL;
 
-  string sql = insert_1 + name + "';";
+  string sql = insert_1 + username + "';";
 
   cout << endl << "SQL Query :" << sql << endl;
   exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_msg);
@@ -641,20 +655,17 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff) {
 
   long long int sto_1;
   string current_id = to_string(new_item.item_id);
-  string current_name = new_item.item_name;
-  string current_price = to_string(new_item.selling_price);
-  string stock_diff = to_string(diff);
-
   char* error_msg = NULL;
 
   string query =
       "SELECT * FROM Item_Info Where Item_Info.ID = " + current_id + ";";
   cout << endl << "Sql Query :" << query << endl;
 
-  struct Data_v* get_ans = new Data_v();
+  struct Data_for_Item* get_ans = new Data_for_Item();
   get_ans->size = 0;
 
-  exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &error_msg);
+  exit = sqlite3_exec(DB, query.c_str(), callback2_getting_Item_data, get_ans,
+                      &error_msg);
 
   if (exit != SQLITE_OK)
     cout << "Search Query Failed" << endl;
@@ -670,77 +681,115 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff) {
   }
 
   cout << "\nOutput Message " << string_message << endl;
+  std::cout << "Vector size: " << get_ans->data1.size() << "\n";
 
-  string temp1_id = "", temp2_name = "", temp3_price = "", temp4_stock = "";
-
-  for (auto i1 : get_ans->data) {
-    temp1_id = i1["ID"];
-    temp2_name = i1["name"];
-    temp3_price = i1["price"];
-    temp4_stock = i1["stock"];
-  }
-
-  ItemUpdateResults return_val = ItemUpdateResults::kDoesNotExist;
-
-  if (temp1_id == "") {
-    // Data is not included in DataBase
-    return_val = ItemUpdateResults::kDoesNotExist;
-    // no data
+  if (get_ans->data1.size() == 0) {
     sqlite3_close(DB);
-    return return_val;
-
-  } else {
-    // compare name and table data
-    if (temp2_name.compare(current_name) != 0) {
-      // Different name
-      return_val = ItemUpdateResults::kExistsWithDiffName;
-      sqlite3_close(DB);
-      return return_val;
-
-    } else if (temp4_stock < stock_diff) {
-      // stock not available
-      cout << " " << temp4_stock << " " << stock_diff << endl;
-      return_val = ItemUpdateResults::kStockNegative;
-      sqlite3_close(DB);
-      return return_val;
-
-    } else {
-      sto_1 = stoi(temp4_stock);
-      sto_1 = sto_1 + diff;  // new stock value
-      query = "UPDATE Item_Info SET stock = " + to_string(sto_1) +
-              " WHERE ID = " + temp1_id + ";";
-
-      cout << "\nSql Query " << query << endl;
-
-      exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &error_msg);
-
-      if (exit != SQLITE_OK)
-        cout << "Search Query Failed" << endl;
-      else {
-        cout << "Operation OK!" << endl;
-      }
-
-      if (error_msg == NULL) {
-        string_message == "";
-      } else {
-        string_message = error_msg;
-      }
-
-      cout << " \n Updated Stock Value " << sto_1 << endl;
-      cout << " \n Output Message" << string_message << endl;
-
-      return_val = ItemUpdateResults::kExists;
-      sqlite3_close(DB);
-      return return_val;
-    }
+    std::cout << "Item doesnt exist!\n\n";
+    return ItemUpdateResults::kDoesNotExist;
   }
+
+  string current_name = (new_item.item_name == "") ? get_ans->data1.begin()->first.item_name : new_item.item_name;
+  // string current_price = to_string(new_item.selling_price);
+  string stock_diff = to_string(diff);
+
+  sto_1 = get_ans->data1.begin()->second;
+  sto_1 = sto_1 + diff;  // new stock value
+  query = "UPDATE Item_Info SET stock = " + to_string(sto_1) + ", Name = \"" + current_name + "\""
+          " WHERE ID = " + std::to_string(new_item.item_id) + ";";
+
+  cout << "\nSql Query " << query << endl;
+
+  exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &error_msg);
+
+  if (exit != SQLITE_OK)
+    cout << "Search Query Failed" << endl;
+  else {
+    cout << "Operation OK!" << endl;
+  }
+
+  if (error_msg == NULL) {
+    string_message == "";
+  } else {
+    string_message = error_msg;
+  }
+
+  cout << " \n Updated Stock Value " << sto_1 << endl;
+  cout << " \n Output Message" << string_message << endl;
+
+
+
+  // string temp1_id = "", temp2_name = "", temp3_price = "", temp4_stock = "";
+
+  // for (auto i1 : get_ans->data) {
+  //   temp1_id = i1["ID"];
+  //   temp2_name = i1["name"];
+  //   temp3_price = i1["price"];
+  //   temp4_stock = i1["stock"];
+  // }
+
+  // ItemUpdateResults return_val = ItemUpdateResults::kDoesNotExist;
+
+  // if (temp1_id == "") {
+  //   // Data is not included in DataBase
+  //   return_val = ItemUpdateResults::kDoesNotExist;
+  //   // no data
+  //   sqlite3_close(DB);
+  //   return return_val;
+
+  // } else {
+  //   // compare name and table data
+  //   if (temp2_name.compare(current_name) != 0) {
+  //     // Different name
+  //     return_val = ItemUpdateResults::kExistsWithDiffName;
+  //     sqlite3_close(DB);
+  //     return return_val;
+
+  //   } else if (temp4_stock < stock_diff) {
+  //     // stock not available
+  //     cout << " " << temp4_stock << " " << stock_diff << endl;
+  //     return_val = ItemUpdateResults::kStockNegative;
+  //     sqlite3_close(DB);
+  //     return return_val;
+
+  //   } else {
+  //     sto_1 = stoi(temp4_stock);
+  //     sto_1 = sto_1 + diff;  // new stock value
+  //     query = "UPDATE Item_Info SET stock = " + to_string(sto_1) +
+  //             " WHERE ID = " + temp1_id + ";";
+
+  //     cout << "\nSql Query " << query << endl;
+
+  //     exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &error_msg);
+
+  //     if (exit != SQLITE_OK)
+  //       cout << "Search Query Failed" << endl;
+  //     else {
+  //       cout << "Operation OK!" << endl;
+  //     }
+
+  //     if (error_msg == NULL) {
+  //       string_message == "";
+  //     } else {
+  //       string_message = error_msg;
+  //     }
+
+  //     cout << " \n Updated Stock Value " << sto_1 << endl;
+  //     cout << " \n Output Message" << string_message << endl;
+
+  //     return_val = ItemUpdateResults::kExists;
+  //     sqlite3_close(DB);
+  //     return return_val;
+  //   }
+  // }
+  auto return_val = ItemUpdateResults::kExists;
 
   sqlite3_close(DB);
   return return_val;
 }
 
-void Database::changeEmployeeCredentials(std::string name,
-                                         std::string new_username,
+void Database::changeEmployeeCredentials(std::string new_name,
+                                         std::string username,
                                          std::string new_password) {
   // connection establised
   sqlite3* DB;
@@ -750,9 +799,9 @@ void Database::changeEmployeeCredentials(std::string name,
   char* error_msg = NULL;
   std::string string_message;
 
-  std::string query = "UPDATE Passwords SET Username = '" + new_username +
-                      "', Password = '" + new_password + "' WHERE Name = '" +
-                      name + "';";
+  std::string query = "UPDATE Passwords SET Name = '" + new_name +
+                      "', Password = '" + new_password + "' WHERE Username = '" +
+                      username + "';";
 
   cout << "\nSql Query " << query << endl;
 
