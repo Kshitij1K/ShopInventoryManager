@@ -62,9 +62,19 @@ git clone https://github.com/Kshitij1K/ShopInventoryManager
 cd ShopInventoryManager
 configure_all
 ```
-This will configure all the CMake projects. After this, copy the Dbmain.db database file from database\src\ direectory and place it in main\build directory. This is so that the executable can find the database file.
+This will configure all the CMake projects. After this, copy the Dbmain.db database file from database\src\ directory and place it in main\build directory. This is so that the executable can find the database file.
 
 After that, run the `make_all` command. This will build all files, and then run the software as well. You can run the software again by running the same command `make_all` (don't worry, the projects wont be built again every time you run this command).
+
+For first time users, there are two users(1 regular employee and 1 admin) already created within the software, so that you can log in initially. After that you are free to create as many users (and log in as them) as you want.
+
+Admin:
+- Username: kabeer
+- Password: 123
+
+Employee:
+- Username: rishk
+- Password: 1234
 
 ### Building the OR-tools library to use the recommendation system
 - First and foremost, MAKE SURE that you have ATLEAST 60-70 GB free space in the drive that you have cloned ShopInventoryManager on.
