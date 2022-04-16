@@ -43,7 +43,7 @@ The install instructions for all dependencies as well as the software is given h
     - Click on install, and once you are done installing, restart your PC.
 
 - MinGW-x64
-    - The pre-built binaries can be downloaded from [here](https://github.com/brechtsanders/winlibs_mingw/releases/download/11.2.0-10.0.0-ucrt-r1/winlibs-i686-posix-dwarf-gcc-11.2.0-mingw-w64ucrt-10.0.0-r1.zip).
+    - The pre-built binaries can be downloaded from [here](https://github.com/brechtsanders/winlibs_mingw/releases/download/11.2.0-10.0.0-ucrt-r1/winlibs-x86_64-posix-seh-gcc-11.2.0-mingw-w64ucrt-10.0.0-r1.zip).
     - Once you download and extract this folder, go to the mingw64 folder, then to bin, and copy the full path to the bin folder. 
     - Then search for and open "Edit System Environment Variables", go to environment variables. Under the system variables section, double click on the "Path" environment variable, and add another entry.
     - Paste the path you just copied. This will allow your system to find the compiler.
