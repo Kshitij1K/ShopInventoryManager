@@ -51,23 +51,12 @@ class Database {
 
   LoginResult verifyCredentials(std::string username, std::string password);
 
-  void updateEmployeeLogin(std::string employee_name, std::string time,
-                           std::string date = "");
-  // void updateEmployeeLogin(std::string employee_name, std::string time);
-
-  void updateEmployeeLogout(std::string employee_name, std::string time,
-                            std::string date = "");
-  // void updateEmployeeLogout(std::string employee_name, std::string time);
-  AttendanceRecord getEmployeeAttendance(std::string employee_name,
-                                         std::string date);
-
   void addEmployee(std::string name, std::string username, std::string password,
                    bool is_admin);
   void removeEmployee(std::string username);
   void changeEmployeeCredentials(std::string new_name, std::string username,
                                  std::string new_password);
 
-  // ItemUpdateResults addNewItem(Item new_item);
   ItemUpdateResults addNewItem(Item new_item, long long int stock = 0);
 
   ItemUpdateResults updateStock(Item item, long long int diff);
@@ -76,6 +65,8 @@ class Database {
   long long int getItemsSold(long long int id);
 
   ItemStocks getAllItemStocks();
+
+  long long int getItemStock(long long int id);
 
   Item getItemInfo(long long int item_id);
 

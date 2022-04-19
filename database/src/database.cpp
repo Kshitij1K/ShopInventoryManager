@@ -54,11 +54,6 @@ static int callback_all_strings(void* data, int argc, char** argv,
   std::vector<std::string>* str = (std::vector<std::string>*)data;
 
   if (azColName == NULL) return 0;
-  // int size = sizeof(azColName)/sizeof(azColName[0]);
-
-  std::cout << argc << ": Size";
-  // str->push_back(std::string(argv[0]));
-  // str->push_back(std::string(argv[1]));
 
   return 0;
 }
@@ -348,118 +343,6 @@ Predict_record Database::retrieve_predict_data_basis_of_id(
   return return_val1;
 }
 
-void Database::updateEmployeeLogin(std::string employee_name, std::string time,
-                                   std::string date) {
-  // connection establised
-  sqlite3* DB;
-  int exit = 0;
-  DB = this->establish_connection(exit);
-
-  string name = employee_name;
-  string query = "";
-
-  string insert_1 = "INSERT INTO Emp_login_Info VALUES(";
-  string insert_name = name;
-  string insert_time = time;
-  string insert_date = date;
-
-  char* error_msg = NULL;
-
-  string sql = insert_1 + "'" + insert_name + "','" + insert_time + "',NULL,'" +
-               insert_date + "',NULL);";
-  cout << "\nSQL : "
-       << " " << sql << endl;
-  exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_msg);
-  std::string string_message;
-  if (error_msg == NULL) {
-    string_message == "";
-  } else {
-    string_message = error_msg;
-  }
-
-  cout << "\nOutput of Execution: " << string_message << endl;
-
-  if (exit != SQLITE_OK)
-    cout << "Error in Insertion" << endl;
-  else {
-    cout << "Operation OK!" << endl;
-  }
-  sqlite3_close(DB);
-}
-
-void Database::updateEmployeeLogout(string name, std::string time,
-                                    string date) {
-  // connection establised
-  sqlite3* DB;
-  int exit = 0;
-  DB = this->establish_connection(exit);
-
-  string query = "";
-
-  string insert_1 = "UPDATE Emp_Login_Info SET ";
-  string emp_name = name;
-  string logout_time = time;
-  string Date_val_logout = date;
-  char* error_msg = NULL;
-
-  string sql = insert_1 + "Logout_T = '" + logout_time + "',Date_val_logout='" +
-               Date_val_logout + "' WHERE (Emp_Name = '" + emp_name +
-               "' AND Logout_T is NULL AND Date_val_logout is NULL ) ;";
-  cout << "\nSQL : "
-       << " " << sql << endl;
-  exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_msg);
-
-  std::string string_message;
-  if (error_msg == NULL) {
-    string_message == "";
-  } else {
-    string_message = error_msg;
-  }
-
-  cout << "\nOutput: " << string_message << endl;
-  if (exit != SQLITE_OK)
-    cout << "Error in Insertion" << endl;
-  else {
-    cout << "Operation OK!" << endl;
-  }
-  sqlite3_close(DB);
-}
-
-AttendanceRecord Database::getEmployeeAttendance(std::string employee_name,
-                                                 std::string date) {
-  sqlite3* DB;
-  int exit = 0;
-  DB = this->establish_connection(exit);
-
-  std::list<std::pair<std::string, std::string>> ans1;
-  string query = "";
-  query = "SELECT Login_T,Logout_T FROM Emp_Login_Info WHERE (Emp_Name = '" +
-          employee_name + "' AND Date_val_login='" + date + "' );";
-  struct Data_v* get_ans = new Data_v();
-  get_ans->size = 0;
-  char* error_msg = NULL;
-
-  cout << endl << "SQL Query :" << query << endl;
-  exit = sqlite3_exec(DB, query.c_str(), callback1, get_ans, &error_msg);
-
-  std::string string_message;
-  if (error_msg == NULL) {
-    string_message == "";
-  } else {
-    string_message = error_msg;
-  }
-
-  cout << endl;
-  for (auto i1 : get_ans->data) {
-    pair<std::string, std::string> temp1 =
-        make_pair(i1["Login_T"], i1["Logout_T"]);
-    ans1.push_back(temp1);
-  }
-  cout << "\nOutput Message " << string_message << endl;
-  sqlite3_close(DB);
-  return ans1;
-}
-
 ItemUpdateResults Database::addNewItem(Item new_item, long long int stock) {
   // connection establised
   sqlite3* DB;
@@ -717,71 +600,6 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff) {
   cout << " \n Updated Stock Value " << sto_1 << endl;
   cout << " \n Output Message" << string_message << endl;
 
-
-
-  // string temp1_id = "", temp2_name = "", temp3_price = "", temp4_stock = "";
-
-  // for (auto i1 : get_ans->data) {
-  //   temp1_id = i1["ID"];
-  //   temp2_name = i1["name"];
-  //   temp3_price = i1["price"];
-  //   temp4_stock = i1["stock"];
-  // }
-
-  // ItemUpdateResults return_val = ItemUpdateResults::kDoesNotExist;
-
-  // if (temp1_id == "") {
-  //   // Data is not included in DataBase
-  //   return_val = ItemUpdateResults::kDoesNotExist;
-  //   // no data
-  //   sqlite3_close(DB);
-  //   return return_val;
-
-  // } else {
-  //   // compare name and table data
-  //   if (temp2_name.compare(current_name) != 0) {
-  //     // Different name
-  //     return_val = ItemUpdateResults::kExistsWithDiffName;
-  //     sqlite3_close(DB);
-  //     return return_val;
-
-  //   } else if (temp4_stock < stock_diff) {
-  //     // stock not available
-  //     cout << " " << temp4_stock << " " << stock_diff << endl;
-  //     return_val = ItemUpdateResults::kStockNegative;
-  //     sqlite3_close(DB);
-  //     return return_val;
-
-  //   } else {
-  //     sto_1 = stoi(temp4_stock);
-  //     sto_1 = sto_1 + diff;  // new stock value
-  //     query = "UPDATE Item_Info SET stock = " + to_string(sto_1) +
-  //             " WHERE ID = " + temp1_id + ";";
-
-  //     cout << "\nSql Query " << query << endl;
-
-  //     exit = sqlite3_exec(DB, query.c_str(), NULL, 0, &error_msg);
-
-  //     if (exit != SQLITE_OK)
-  //       cout << "Search Query Failed" << endl;
-  //     else {
-  //       cout << "Operation OK!" << endl;
-  //     }
-
-  //     if (error_msg == NULL) {
-  //       string_message == "";
-  //     } else {
-  //       string_message = error_msg;
-  //     }
-
-  //     cout << " \n Updated Stock Value " << sto_1 << endl;
-  //     cout << " \n Output Message" << string_message << endl;
-
-  //     return_val = ItemUpdateResults::kExists;
-  //     sqlite3_close(DB);
-  //     return return_val;
-  //   }
-  // }
   auto return_val = ItemUpdateResults::kExists;
 
   sqlite3_close(DB);
@@ -1022,11 +840,45 @@ ItemStocks Database::getAllItemStocks() {
 
   ans1 = get_ans->data1;
   delete get_ans;
-  cout << "line 1357 reached";
   cout << "\nOutput Message " << string_message << endl;
   sqlite3_close(DB);
   return ans1;
 }
+
+long long int Database::getItemStock(long long int id) {
+  sqlite3* DB;
+  int exit = 0;
+
+  DB = this->establish_connection(exit);
+
+  string query;
+  long long int sto_1;
+
+  ItemStocks ans1;
+  char* error_msg = NULL;
+  string get_ans;
+  query = "SELECT stock FROM Item_Info WHERE ID=" + std::to_string(id) + ";";
+
+  cout << endl << "Sql Query :" << query << endl;
+  exit = sqlite3_exec(DB, query.c_str(), callback_simple_string, &get_ans,
+                      &error_msg);
+  if (get_ans == "") {
+    cout << "\n No such Data is present in Database";
+    sqlite3_close(DB);
+    return -1;
+  }
+  std::string string_message;
+  if (error_msg == NULL) {
+    string_message == "";
+  } else {
+    string_message = error_msg;
+  }
+
+  cout << "\nOutput Message " << string_message << endl;
+  sqlite3_close(DB);
+  return stoll(get_ans);
+}
+
 
 Item Database::getItemInfo(long long int item_id) {
   Item* item = new Item;

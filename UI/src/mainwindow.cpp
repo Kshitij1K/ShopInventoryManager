@@ -76,7 +76,7 @@ MainWindow::MainWindow(Shop* shop, QWidget* parent)
   // ui->stock_info_table->setColumnCount(4);
   // QStringList k = {"yo, u, i, o"};
   // ui->stock_info_table->setHorizontalHeaderLabels(k);
-  // ui->stock_info_table->
+  // ui->stock_info_table->-
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -218,11 +218,18 @@ void MainWindow::addButtonInvoicePressed() {
   long long int quantity = stoll(ui->Quantity_Line_Edit->text().toStdString());
 
   Item item = shop_->database.getItemInfo(item_id);
+  long long int stock = shop_->database.getItemStock(item_id);
+
+  
 
   ItemStocks::iterator cart_item_;
   for (cart_item_ = shop_->consumer_cart.begin();
        cart_item_ != shop_->consumer_cart.end(); cart_item_++) {
     if (cart_item_->first.item_id == item_id) {
+      if ((cart_item_->second + quantity) > stock) {
+        std::cout << "Not enough items in stock! Aborting.\n\n";
+        return;
+      }
       cart_item_->second += quantity;
       refreshInvoiceTable();
       break;
@@ -230,6 +237,10 @@ void MainWindow::addButtonInvoicePressed() {
   }
 
   if (cart_item_ == shop_->consumer_cart.end()) {
+    if (quantity > stock) {
+      std::cout << "Not enough items in stock! Aborting.\n\n";
+      return;
+    }
     shop_->consumer_cart.push_back({item, quantity});
     refreshInvoiceTable();
   }
