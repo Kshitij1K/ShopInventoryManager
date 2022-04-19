@@ -1,10 +1,9 @@
 #include "mainwindow.hpp"
+#include <chrono>
 #include <iostream>
 #include <shop.hpp>
-#include <chrono>
 #include <thread>
 #include "ui_mainwindow.h"
-
 
 MainWindow::MainWindow(Shop* shop, QWidget* parent)
     : QMainWindow(parent), shop_(shop), ui(new Ui::MainWindow) {
@@ -21,8 +20,6 @@ MainWindow::MainWindow(Shop* shop, QWidget* parent)
 
   QObject::connect(ui->stock_info_button, &QPushButton::clicked, this,
                    &MainWindow::stockInfoRequested);
-  // QObject::connect(ui->employee_list_button, &QPushButton::clicked, this,
-  // &MainWindow::employeeListRequested);
   QObject::connect(ui->Update_Item_Information, &QPushButton::clicked, this,
                    &MainWindow::updateItemsRequested);
   QObject::connect(ui->Update_Button, &QPushButton::clicked, this,
@@ -55,10 +52,11 @@ MainWindow::MainWindow(Shop* shop, QWidget* parent)
   QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked, this,
                    &MainWindow::computeSuggestionButtonPressed);
 
-  // QObject::connect(ui->compute_suggestion_button, &QPushButton::clicked,
-  // this, &MainWindow::suggestionAsked);
   QObject::connect(ui->Add_Button, &QPushButton::clicked, this,
                    &MainWindow::addNewItem);
+
+  QObject::connect(ui->deleteItemButton, &QPushButton::clicked, this,
+                   &MainWindow::deleteItem);
 
   QObject::connect(ui->Add_Button_Invoice, &QPushButton::clicked, this,
                    &MainWindow::addButtonInvoicePressed);
@@ -68,15 +66,6 @@ MainWindow::MainWindow(Shop* shop, QWidget* parent)
                    &MainWindow::generateInvoiceCalled);
   QObject::connect(ui->Cancel_Button, &QPushButton::clicked, this,
                    &MainWindow::cancelInvoiceCalled);
-
-  // ui->stock_info_table->setModel(&stock_info_model);
-
-  // ui->stock_info_table->insertRow(2);
-  // ui->stock_info_table->setRowCount(10);
-  // ui->stock_info_table->setColumnCount(4);
-  // QStringList k = {"yo, u, i, o"};
-  // ui->stock_info_table->setHorizontalHeaderLabels(k);
-  // ui->stock_info_table->-
 }
 
 MainWindow::~MainWindow() { delete ui; }
@@ -219,8 +208,6 @@ void MainWindow::addButtonInvoicePressed() {
 
   Item item = shop_->database.getItemInfo(item_id);
   long long int stock = shop_->database.getItemStock(item_id);
-
-  
 
   ItemStocks::iterator cart_item_;
   for (cart_item_ = shop_->consumer_cart.begin();
@@ -370,6 +357,12 @@ void MainWindow::deleteEmployeeRequest() {
   ui->employeeNameLineEdit->clear();
   ui->employeeUsernameLineEdit->clear();
   ui->employeePasswordLineEdit->clear();
+}
+
+void MainWindow::deleteItem() {
+  auto id = ui->itemIDLineEdit->text().toLongLong();
+  shop_->database.removeItem(id);
+  ui->itemIDLineEdit->clear();
 }
 
 void MainWindow::forecastButtonPressed() {

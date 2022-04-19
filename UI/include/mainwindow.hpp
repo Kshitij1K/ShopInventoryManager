@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow {
   void deleteEmployeeRequest();
   void changeCredentialsRequest();
   void addNewItem();
+  void deleteItem();
   void updateItemStock();
 
   void prepareStockInfoTable(ItemStocks items);

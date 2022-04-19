@@ -60,6 +60,7 @@ class Database {
   ItemUpdateResults addNewItem(Item new_item, long long int stock = 0);
 
   ItemUpdateResults updateStock(Item item, long long int diff);
+  void removeItem(long long int id);
 
   void updateItemsSold(Item item, long long int quantity);
   long long int getItemsSold(long long int id);

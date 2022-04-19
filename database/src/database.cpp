@@ -530,6 +530,89 @@ void Database::removeEmployee(std::string username) {
   cout << endl << "Exn Output Message " << string_message << endl;
 }
 
+void Database::removeItem(long long int id) {
+  // connection establised
+  sqlite3* DB;
+  int exit = 0;
+
+  DB = this->establish_connection(exit);
+
+  string query = "";
+  string insert_1 = "DELETE FROM Item_Info WHERE ID='";
+
+  char* error_msg = NULL;
+
+  string sql = insert_1 + to_string(id) + "';";
+
+  cout << endl << "SQL Query :" << sql << endl;
+  exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_msg);
+
+  std::string string_message;
+  if (error_msg == NULL) {
+    string_message == "";
+  } else {
+    string_message = error_msg;
+  }
+
+  if (exit != SQLITE_OK)
+    cout << "Error in Deletion" << endl;
+  else {
+    cout << "Operation OK!" << endl;
+  }
+
+  cout << endl << "Exn Output Message " << string_message << endl;
+
+  query = "";
+  insert_1 = "DELETE FROM Predict_Table WHERE Item_Id='";
+
+  error_msg = NULL;
+
+  sql = insert_1 + to_string(id) + "';";
+
+  cout << endl << "SQL Query :" << sql << endl;
+  exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_msg);
+
+  string_message;
+  if (error_msg == NULL) {
+    string_message == "";
+  } else {
+    string_message = error_msg;
+  }
+
+  if (exit != SQLITE_OK)
+    cout << "Error in Deletion" << endl;
+  else {
+    cout << "Operation OK!" << endl;
+  }
+
+  cout << endl << "Exn Output Message " << string_message << endl;
+
+  query = "";
+  insert_1 = "DELETE FROM Sold_Items WHERE Item_ID='";
+
+  error_msg = NULL;
+
+  sql = insert_1 + to_string(id) + "';";
+
+  cout << endl << "SQL Query :" << sql << endl;
+  exit = sqlite3_exec(DB, sql.c_str(), NULL, 0, &error_msg);
+
+  string_message;
+  if (error_msg == NULL) {
+    string_message == "";
+  } else {
+    string_message = error_msg;
+  }
+
+  if (exit != SQLITE_OK)
+    cout << "Error in Deletion" << endl;
+  else {
+    cout << "Operation OK!" << endl;
+  }
+
+  cout << endl << "Exn Output Message " << string_message << endl;
+}
+
 ItemUpdateResults Database::updateStock(Item new_item, long long int diff) {
   // connection establised
   sqlite3* DB;
@@ -572,14 +655,19 @@ ItemUpdateResults Database::updateStock(Item new_item, long long int diff) {
     return ItemUpdateResults::kDoesNotExist;
   }
 
-  string current_name = (new_item.item_name == "") ? get_ans->data1.begin()->first.item_name : new_item.item_name;
+  string current_name = (new_item.item_name == "")
+                            ? get_ans->data1.begin()->first.item_name
+                            : new_item.item_name;
   // string current_price = to_string(new_item.selling_price);
   string stock_diff = to_string(diff);
 
   sto_1 = get_ans->data1.begin()->second;
   sto_1 = sto_1 + diff;  // new stock value
-  query = "UPDATE Item_Info SET stock = " + to_string(sto_1) + ", Name = \"" + current_name + "\""
-          " WHERE ID = " + std::to_string(new_item.item_id) + ";";
+  query = "UPDATE Item_Info SET stock = " + to_string(sto_1) + ", Name = \"" +
+          current_name +
+          "\""
+          " WHERE ID = " +
+          std::to_string(new_item.item_id) + ";";
 
   cout << "\nSql Query " << query << endl;
 
@@ -618,8 +706,8 @@ void Database::changeEmployeeCredentials(std::string new_name,
   std::string string_message;
 
   std::string query = "UPDATE Passwords SET Name = '" + new_name +
-                      "', Password = '" + new_password + "' WHERE Username = '" +
-                      username + "';";
+                      "', Password = '" + new_password +
+                      "' WHERE Username = '" + username + "';";
 
   cout << "\nSql Query " << query << endl;
 
@@ -878,7 +966,6 @@ long long int Database::getItemStock(long long int id) {
   sqlite3_close(DB);
   return stoll(get_ans);
 }
-
 
 Item Database::getItemInfo(long long int item_id) {
   Item* item = new Item;
