@@ -66,6 +66,20 @@ MainWindow::MainWindow(Shop* shop, QWidget* parent)
                    &MainWindow::generateInvoiceCalled);
   QObject::connect(ui->Cancel_Button, &QPushButton::clicked, this,
                    &MainWindow::cancelInvoiceCalled);
+
+  ui->itemIDLineEdit->setValidator(new QIntValidator(1, 32000, this));
+  ui->stockChangesLineEdit->setValidator(new QIntValidator(1, 32000, this));
+  ui->buyingPriceLineEdit->setValidator(new QDoubleValidator(0.0, 10000000000000000.00, 2, this));
+  ui->sellingPriceLineEdit->setValidator(new QDoubleValidator(0.0, 10000000000000000.00, 2, this));
+  ui->holdingPriceLineEdit->setValidator(new QDoubleValidator(0.0, 10000000000000000.00, 2, this));
+
+  ui->capital_input_field->setValidator(new QDoubleValidator(0.0, 10000000000000000.00, 2, this));
+
+  // No space validators
+
+  ui->Item_id_Line_Edit->setValidator(new QIntValidator(1, 32000, this));
+  ui->Quantity_Line_Edit->setValidator(new QIntValidator(1, 32000, this));
+  
 }
 
 MainWindow::~MainWindow() { delete ui; }
