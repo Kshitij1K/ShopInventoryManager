@@ -362,10 +362,10 @@ void MainWindow::changeCredentialsRequest() {
 }
 
 void MainWindow::deleteEmployeeRequest() {
-  std::string employee_name = ui->employeeNameLineEdit->text().toStdString();
-  if (employee_name == "Admin") return;
+  std::string employee_username = ui->employeeUsernameLineEdit->text().toStdString();
+  if (employee_username == "admin") return;
 
-  shop_->employee_name = employee_name;
+  shop_->employee_username = employee_username;
 
   shop_->callEvent(ShopState::Event::kEmployeeDeleted);
   ui->employeeNameLineEdit->clear();
